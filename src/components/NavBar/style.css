@@ -1,0 +1,12 @@
+.nav-element {
+  background-color: #113;
+}
+.nav-element a {
+  color: #fcfdff;
+}
+
+@media only screen and (min-width: 640px) {
+  .section-logo-menu {
+    gap: 100px;
+  }
+}
