@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+:root {
+  --light-weight: 100;
+  --regular-weight: 400;
+  --bold-weight: 700;
+  --medium-weight: 500;
+  --h1-size: 96px;
+  --h2-size: 60px;
+  --h3-size: 48px;
+  --h4-size: 34px;
+  --h5-size: 24px;
+  --h6-size: 20px;
+}
