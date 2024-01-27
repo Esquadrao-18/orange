@@ -1,8 +1,10 @@
+@import url(../../styles/global.css);
 .nav-element {
   background-color: #113;
 }
 .nav-element a {
   color: #fcfdff;
+  font-weight: var(--medium-weight);
 }
 
 @media only screen and (min-width: 640px) {
