@@ -1,5 +1,7 @@
 import { ThemeProvider } from '@emotion/react'
 import { createTheme } from '@mui/material'
+import Login from './pages/Login/login'
+
 const secondary = {
   main: '#FF5522',
   dark: '#CC4400',
@@ -30,6 +32,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App"></div>
+      <Login />
     </ThemeProvider>
   )
 }
