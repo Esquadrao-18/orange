@@ -32,7 +32,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <div className="App">
+        <div className="App overflow-x-hidden">
           <Router />
         </div>
       </BrowserRouter>
