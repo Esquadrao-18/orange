@@ -1,3 +1,4 @@
+import { useTheme } from '@emotion/react'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuIcon from '@mui/icons-material/Menu'
 import {
@@ -6,7 +7,8 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -16,6 +18,9 @@ import profileImg from '../../assets/profile-image.svg'
 import './style.css'
 
 function NavBar() {
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
   const [anchorElUser, setAnchorElUser] = useState(null)
 
   const handleOpenUserMenu = (event) => {
@@ -34,6 +39,7 @@ function NavBar() {
           aria-label="menu"
           sx={{ mr: 2 }}
           onClick={handleOpenUserMenu}
+          style={{ visibility: isSmallScreen ? 'visible' : 'hidden' }}
         >
           <MenuIcon color="principal" fontSize="large" />
         </IconButton>
@@ -60,12 +66,16 @@ function NavBar() {
             <Typography>camila.ux@gmail.com</Typography>
           </MenuItem>
           <Divider />
-          <MenuItem onClick={handleCloseUserMenu}>
-            <Typography>Projetos</Typography>
-          </MenuItem>
-          <MenuItem onClick={handleCloseUserMenu}>
-            <Typography>Descobrir</Typography>
-          </MenuItem>
+          <Link to="/meus-projetos">
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography>Projetos</Typography>
+            </MenuItem>
+          </Link>
+          <Link to="/descobrir">
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography>Descobrir</Typography>
+            </MenuItem>
+          </Link>
           <Divider />
           <MenuItem onClick={handleCloseUserMenu}>
             <ListItemIcon>
