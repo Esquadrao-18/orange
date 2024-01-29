@@ -3,7 +3,7 @@ import AuthLayout from '../pages/AuthLayout/AuthLayout'
 import Discover from '../pages/Discover/Discover'
 import Login from '../pages/Login/Login'
 import MainLayout from '../pages/MainLayout/MainLayout'
-import Profile from '../pages/Profile/Profile'
+import MyProjects from '../pages/MyProjects/MyProjects'
 
 export default function Router() {
   let element = useRoutes([
@@ -14,7 +14,7 @@ export default function Router() {
     {
       element: <MainLayout />,
       children: [
-        { path: 'meus-projetos', element: <Profile /> },
+        { path: 'meus-projetos', element: <MyProjects /> },
         { path: 'descobrir', element: <Discover /> }
       ]
     }

@@ -1,0 +1,14 @@
+@media only screen and (min-width: 300px) and (max-width: 640px) {
+  .user-container {
+    flex-direction: column;
+    padding-top: 56px;
+  }
+
+  .user-infos p {
+    margin: 8px 0px;
+  }
+
+  .user-infos h5 {
+    margin: 0;
+  }
+}

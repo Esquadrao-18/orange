@@ -34,14 +34,17 @@ const projects = [
   }
 ]
 
-function Profile() {
+function MyProjects() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1500)
   }, [])
   return (
-    <div className="w-screen flex flex-col px-8 profile-container ">
+    <section
+      className="w-screen flex flex-col px-8 items-center "
+      style={{ border: '1px solid red' }}
+    >
       <section className="w-full flex items-center justify-center gap-[42px] sm:py-28 user-container ">
         <figure>
           <img
@@ -51,21 +54,24 @@ function Profile() {
           />
         </figure>
         <div className="user-infos">
-          <h5 className="text-2xl mb-4">Camila Soares</h5>
+          <h5 className="text-2xl mb-4" style={{ color: '#303133' }}>
+            Camila Soares
+          </h5>
           <p className="mb-6 opacity-50	">Brasil</p>
           <Button
             disabled
             className="font-medium"
             color="secondary"
             variant="contained"
+            sx={{ ':disabled': { color: 'rgba(0, 0, 0, 0.38)' } }}
           >
             Adicionar Projeto
           </Button>
         </div>
       </section>
       <ProjectsList projects={projects} isLoading={loading} />
-    </div>
+    </section>
   )
 }
 
-export default Profile
+export default MyProjects
