@@ -30,21 +30,30 @@ function NavBar() {
     setAnchorElUser(null)
   }
   return (
-    <nav className="w-full flex py-4 px-[30px] items-center justify-between nav-element">
-      <section className="flex section-logo-menu items-center">
+    <nav
+      className="w-full flex py-4 px-[30px] items-center justify-between"
+      style={{ backgroundColor: '#113' }}
+    >
+      <section className="flex items-center section-logo-menu">
         <IconButton
           size="large"
           edge="start"
           color="text.secondary"
           aria-label="menu"
-          sx={{ mr: 2 }}
+          sx={{ mr: 1 }}
           onClick={handleOpenUserMenu}
-          style={{ visibility: isSmallScreen ? 'visible' : 'hidden' }}
+          style={{
+            visibility: isSmallScreen ? 'visible' : 'hidden',
+            width: '3px'
+          }}
         >
-          <MenuIcon color="principal" fontSize="large" />
+          <MenuIcon
+            color="principal"
+            fontSize={isSmallScreen ? 'medium' : 'large'}
+          />
         </IconButton>
         <Menu
-          sx={{ mt: '45px' }}
+          sx={{ mt: '63px', ml: -2 }}
           id="menu-appbar"
           anchorEl={anchorElUser}
           anchorOrigin={{
@@ -63,7 +72,9 @@ function NavBar() {
             <Typography>Camila</Typography>
           </MenuItem>
           <MenuItem onClick={handleCloseUserMenu}>
-            <Typography>camila.ux@gmail.com</Typography>
+            <Typography sx={{ color: 'rgba(0, 0, 0, 0.60)', mt: -2 }}>
+              Camila.ux@gmail.com
+            </Typography>
           </MenuItem>
           <Divider />
           <Link to="/meus-projetos">
@@ -77,12 +88,14 @@ function NavBar() {
             </MenuItem>
           </Link>
           <Divider />
-          <MenuItem onClick={handleCloseUserMenu}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <Typography>Sair</Typography>
-          </MenuItem>
+          <Link to="/">
+            <MenuItem onClick={handleCloseUserMenu}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <Typography>Sair</Typography>
+            </MenuItem>
+          </Link>
         </Menu>
         <Link to="/">
           <img src={orangeLogo} alt="Logotipo Orange Juice Portfolio" />
