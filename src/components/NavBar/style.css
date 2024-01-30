@@ -1,6 +1,6 @@
 @import url(../../styles/global.css);
 
-@media only screen and (min-width: 300px) and (max-width: 640px) {
+@media only screen and (min-width: 300px) and (max-width: 797px) {
   .section-logo-menu img {
     width: 83px;
     height: 31px;

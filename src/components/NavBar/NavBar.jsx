@@ -19,7 +19,7 @@ import './style.css'
 
 function NavBar() {
   const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const [anchorElUser, setAnchorElUser] = useState(null)
 
@@ -34,7 +34,7 @@ function NavBar() {
       className="w-full flex py-4 px-[30px] items-center justify-between"
       style={{ backgroundColor: '#113' }}
     >
-      <section className="flex items-center sm:gap-[100px] section-logo-menu">
+      <section className="flex items-center md:gap-[100px] section-logo-menu">
         <IconButton
           size="large"
           edge="start"
@@ -99,9 +99,14 @@ function NavBar() {
         </Menu>
         <img src={orangeLogo} alt="Logotipo Orange Juice Portfolio" />
 
-        <ul className="list-none sm:flex hidden items-center flex-1 gap-6">
+        <ul className="list-none md:flex hidden items-center flex-1 gap-6">
           <li style={{ color: '#fcfdff' }}>
-            <Link to="/meus-projetos">Meus Projetos</Link>
+            <Link
+              sx={{ visibility: isSmallScreen ? 'hidden' : 'visible' }}
+              to="/meus-projetos"
+            >
+              Meus Projetos
+            </Link>
           </li>
           <li style={{ color: '#fcfdff' }}>
             <Link to="/descobrir">Descobrir</Link>

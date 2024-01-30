@@ -38,10 +38,7 @@ function Discover() {
     setTimeout(() => setLoading(false), 1500)
   }, [])
   return (
-    <section
-      className="w-screen flex flex-col px-8 items-center discover-container"
-      style={{ border: '1px solid red' }}
-    >
+    <section className="w-screen flex flex-col px-8 items-center discover-container">
       <section className="w-full flex items-center justify-center gap-[42px] sm:py-28 user-container ">
         <h2
           className="text-center"
