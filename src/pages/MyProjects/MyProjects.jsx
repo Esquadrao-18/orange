@@ -5,33 +5,33 @@ import ProjectsList from '../../components/ProjectsList/ProjectsList'
 import './style.css'
 
 const projects = [
-  {
-    id: 1,
-    img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
-    link: 'github.com/algumacoisa',
-    description: 'Esse é meu projeto',
-    date: '12/12',
-    tags: ['UX', 'Web']
-  },
-  {
-    id: 2,
-    img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
-    link: 'github.com/algumacoisa',
-    description: 'Esse é meu projeto',
-    date: '12/12',
-    tags: ['UX', 'Web']
-  },
-  {
-    id: 3,
-    img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
-    link: 'github.com/algumacoisa',
-    description: 'Esse é meu projeto',
-    date: '12/12',
-    tags: ['UX', 'Web']
-  }
+  // {
+  //   id: 1,
+  //   img: 'https://source.unsplash.com/featured/389x258',
+  //   name: 'Nome Projeto',
+  //   link: 'github.com/algumacoisa',
+  //   description: 'Esse é meu projeto',
+  //   date: '12/12',
+  //   tags: ['UX', 'Web']
+  // },
+  // {
+  //   id: 2,
+  //   img: 'https://source.unsplash.com/featured/389x258',
+  //   name: 'Nome Projeto',
+  //   link: 'github.com/algumacoisa',
+  //   description: 'Esse é meu projeto',
+  //   date: '12/12',
+  //   tags: ['UX', 'Web']
+  // },
+  // {
+  //   id: 3,
+  //   img: 'https://source.unsplash.com/featured/389x258',
+  //   name: 'Nome Projeto',
+  //   link: 'github.com/algumacoisa',
+  //   description: 'Esse é meu projeto',
+  //   date: '12/12',
+  //   tags: ['UX', 'Web']
+  // }
 ]
 
 function MyProjects() {
@@ -41,10 +41,7 @@ function MyProjects() {
     setTimeout(() => setLoading(false), 1500)
   }, [])
   return (
-    <section
-      className="w-screen flex flex-col px-8 items-center "
-      style={{ border: '1px solid red' }}
-    >
+    <section className="w-screen flex flex-col px-8 items-center ">
       <section className="w-full flex items-center justify-center gap-[42px] sm:py-28 user-container ">
         <figure>
           <img
@@ -59,7 +56,7 @@ function MyProjects() {
           </h5>
           <p className="mb-6 opacity-50	">Brasil</p>
           <Button
-            disabled
+            disabled={projects.length > 0 ? false : true}
             className="font-medium"
             color="secondary"
             variant="contained"
