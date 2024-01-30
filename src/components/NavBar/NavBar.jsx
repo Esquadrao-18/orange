@@ -34,7 +34,7 @@ function NavBar() {
       className="w-full flex py-4 px-[30px] items-center justify-between"
       style={{ backgroundColor: '#113' }}
     >
-      <section className="flex items-center section-logo-menu">
+      <section className="flex items-center sm:gap-[100px] section-logo-menu">
         <IconButton
           size="large"
           edge="start"
@@ -97,15 +97,13 @@ function NavBar() {
             </MenuItem>
           </Link>
         </Menu>
-        <Link to="/">
-          <img src={orangeLogo} alt="Logotipo Orange Juice Portfolio" />
-        </Link>
+        <img src={orangeLogo} alt="Logotipo Orange Juice Portfolio" />
 
         <ul className="list-none sm:flex hidden items-center flex-1 gap-6">
-          <li>
+          <li style={{ color: '#fcfdff' }}>
             <Link to="/meus-projetos">Meus Projetos</Link>
           </li>
-          <li>
+          <li style={{ color: '#fcfdff' }}>
             <Link to="/descobrir">Descobrir</Link>
           </li>
         </ul>
