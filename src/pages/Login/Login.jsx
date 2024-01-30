@@ -1,17 +1,24 @@
 import Banner from "../../components/Banner/banner"
 import loginBanner from "../../assets/login-banner.svg"
-import { TextField , Button } from "@mui/material"
+import { TextField , Button, InputAdornment, IconButton } from "@mui/material"
 import iconGoogle from "../../assets/icon-google.svg"
-import { useForm, Controller } from "react-hook-form"   
+import { useForm, Controller } from "react-hook-form"
+import { useState } from "react"
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 function Login () {
 
         const { control, handleSubmit, formState } = useForm();
         const { errors } = formState;
-    
+        const [showPassword, setShowPassword] = useState(false);
+
         const onSubmit = (data) => {
-        console.log(data);
+            console.log(data);
         }
+        const handleTogglePasswordVisibility = () => {
+            setShowPassword(!showPassword);
+        };
 
     return (
         <main className="flex">
@@ -35,39 +42,54 @@ function Login () {
 
                     <h5 className="lg:text-2xl pb-2" style={{ color: '#515255'}}>
                         Faça login com email
-                    </h5>
-                    
+                    </h5>                  
+
                     <Controller 
                         name="email"
                         control={control}
-                        rules={{ required: true }}
+                        rules={{ required: true , pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/ }}
                         render={({ field }) => (
-                        
                         <TextField
                             label="Email address"
                             variant="outlined"
                             size="large"
                             {...field}
                             error={!!errors.email}
+                            helperText={errors.email ? "Informe um e-mail válido" : ""}
+
                         />
                         )}
                     />
-
-                     <Controller
-                        name="password"
-                        control={control}
-                        rules={{ required: true }}
-                        render={({ field }) => (
-                            <TextField
+               
+                    <Controller
+                            name="password"
+                            control={control}
+                            rules={{ required: "true"  }}
+                            render={({ field }) => (
+                        <TextField
                             id="outlined-password-input"
                             label="Password"
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             autoComplete="current-password"
                             {...field}
                             error={!!errors.password}
+                            helperText={errors.password ? "Informe sua senha" : ""}
+                            InputProps={{
+                                endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleTogglePasswordVisibility}
+                                    edge="end"
+                                    >
+                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                    </IconButton>
+                                </InputAdornment>
+                                ),
+                            }}
                         />
                     )}
-                />
+                    />                                  
 
                     <Button type="submit" variant="contained"
                     color="secondary"
@@ -75,7 +97,7 @@ function Login () {
                     Entrar
                     </Button>
 
-                    <a href="" style={{ color: '#818388'}} >Cadastre-se</a>             
+                    <a style={{ color: '#818388'}} >Cadastre-se</a>             
 
                 </form>
 
@@ -85,6 +107,7 @@ function Login () {
     )
 
 }
+
 export default Login
 
 
