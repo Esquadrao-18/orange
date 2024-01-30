@@ -4,7 +4,7 @@ import ProjectCard from '../ProjectCard/ProjectCard'
 import './style.css'
 
 export default function ProjectsList(props) {
-  const { projects, isLoading, isPersonal } = props
+  const { projects, isPersonal } = props
   return (
     <section className="w-screen flex flex-col px-8">
       <div className="projects-area-top  sm:w-[43%]  w-full">
@@ -19,15 +19,20 @@ export default function ProjectsList(props) {
 
         <TextField fullWidth label="Buscar tags" variant="outlined" />
       </div>
-      <div className="flex flex-wrap gap-6 my-10">
-        {isLoading ? (
+      <div className="flex flex-wrap gap-6 my-10 justify-center sm:justify-normal">
+        {projects.length == 0 ? (
           <>
-            <Skeleton variant="rectangular" width={389} height={258} />
-            <Skeleton variant="rectangular" width={389} height={258} />
-            <Skeleton variant="rectangular" width={389} height={258} />
-            <Skeleton variant="rectangular" width={389} height={258} />
+            <AddProjectCard />
+            <Skeleton
+              variant="rectangular"
+              sx={{ minWidth: 312, maxWidth: 389, height: 258 }}
+            />
+            <Skeleton
+              variant="rectangular"
+              sx={{ minWidth: 312, maxWidth: 389, height: 258 }}
+            />
           </>
-        ) : projects.length > 0 ? (
+        ) : (
           projects.map((project) => (
             <ProjectCard
               isPersonal={isPersonal}
@@ -37,8 +42,6 @@ export default function ProjectsList(props) {
               date={project.date}
             />
           ))
-        ) : (
-          <AddProjectCard />
         )}
       </div>
     </section>
