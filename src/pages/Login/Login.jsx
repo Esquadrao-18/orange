@@ -38,19 +38,19 @@ function Login () {
             
             <section className="flex flex-col justify-center items-center h-screen mx-auto font-sans: Roboto">
                 
-                <h3 className="text-2xl sm:text-5xl" style={{ color: '#222244'}}>
+                <h3 className="text-2xl sm:text-5xl text-[#222244]">
                     Entre no Orange Portfólio
                 </h3>
 
                 <button className="btn btn-secondary my-8 flex text-sm p-3 items-start Neutral 
                  bg-white rounded-md shadow-md">
                     <img src={iconGoogle} className="mr-4"/>
-                    <span className="font-bold" style={{color: '#0000008A'}}> Entrar com o Google</span>
+                    <span className="font-bold text-[#0000008A]"> Entrar com o Google</span>
                 </button>
                 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4 w-80 sm:w-full" >
 
-                    <h5 className="lg:text-2xl pb-2" style={{ color: '#515255'}}>
+                    <h5 className="lg:text-2xl pb-2 text-[#515255]">
                         Faça login com email
                     </h5>                  
 
@@ -107,7 +107,7 @@ function Login () {
                     Entrar
                     </Button>
 
-                    <a style={{ color: '#818388'}} >Cadastre-se</a>             
+                    <a className="text-[#818388]" >Cadastre-se</a>             
 
                 </form>
 
