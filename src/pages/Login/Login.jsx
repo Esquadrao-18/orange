@@ -1,6 +1,6 @@
 import Banner from "../../components/Banner/banner"
 import loginBanner from "../../assets/login-banner.svg"
-import { TextField , Button, InputAdornment, IconButton } from "@mui/material"
+import { TextField , Button, InputAdornment, IconButton, Snackbar, Alert } from "@mui/material"
 import iconGoogle from "../../assets/icon-google.svg"
 import { useForm, Controller } from "react-hook-form"
 import { useState } from "react"
@@ -12,12 +12,22 @@ function Login () {
         const { control, handleSubmit, formState } = useForm();
         const { errors } = formState;
         const [showPassword, setShowPassword] = useState(false);
+        const [loginError, setLoginError] = useState(false);
 
         const onSubmit = (data) => {
-            console.log(data);
-        }
+
+            if (data.email !== 'camis@gmail.com' && data.password !== '123') {
+                setLoginError(true);
+            } else {
+                console.log(data);
+            }
+        };
         const handleTogglePasswordVisibility = () => {
             setShowPassword(!showPassword);
+        };
+            
+        const handleCloseSnackbar = () => {
+            setLoginError(false);
         };
 
     return (
@@ -101,6 +111,18 @@ function Login () {
 
                 </form>
 
+                <Snackbar
+                    open={loginError}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+
+                    <Alert variant="filled" severity="error" onClose={handleCloseSnackbar} sx={{ width: '95%' }}>
+                        Login ou senha inválidos. Tente novamente!
+                    </Alert>
+
+                </Snackbar>
             </section>
             
         </main>
