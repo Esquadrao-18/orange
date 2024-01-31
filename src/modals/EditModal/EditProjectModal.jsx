@@ -1,4 +1,4 @@
-import { Close, Collections } from '@mui/icons-material'
+import { Collections } from '@mui/icons-material'
 import {
   Button,
   CardContent,
@@ -14,25 +14,24 @@ import {
 import { useRef, useState } from 'react'
 import AlertModal from '../AlertModal/AlertModal'
 import PreviewProjectModal from '../PreviewProjectModal/PreviewProjectModal'
-import './style.css'
 
-export default function NewProjectModal(props) {
+export default function EditProjectModal(props) {
   // TODO: Implementar useForm
-
+  const { currentProject, onClose, visible } = props
   const [alertModalVisible, setAlertModalVisible] = useState(false)
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
-  const { visible, onClose } = props
   const fileUploadRef = useRef(null)
-  function handleClose() {
-    onClose()
-  }
-  function handleSave() {
+
+  const handleEdit = () => {
     onClose()
     setAlertModalVisible(true)
   }
-  function closeAlertModal() {
+  const handleClose = () => {
+    onClose()
+  }
+  const closeAlertModal = () => {
     setAlertModalVisible(false)
-    // TODO: Atualizar projetos da listagem
+    // TODO: Atualizar projeto com novas alterações
   }
   const handleOpenPreviewModal = () => {
     setPreviewModalVisible(true)
@@ -44,24 +43,12 @@ export default function NewProjectModal(props) {
     <>
       <Dialog maxWidth={false} open={visible}>
         <div className="container-dialog">
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
-          >
-            <Close />
-          </IconButton>
           <DialogTitle sx={{ fontSize: 24, fontWeight: 400 }}>
-            Adicionar projeto
+            Editar Projeto
           </DialogTitle>
           <DialogContent>
             <form
-              // onSubmit={handleSubmit(data)}
+              // onSubmit={handleSubmit(project)}
               className="flex flex-col-reverse items-center justify-center md:flex-row gap-6 form"
               style={{}}
             >
@@ -76,6 +63,7 @@ export default function NewProjectModal(props) {
                 >
                   Selecione o conteúdo que você deseja fazer upload
                 </DialogContentText>
+
                 <CardContent
                   sx={{
                     padding: 4,
@@ -128,9 +116,7 @@ export default function NewProjectModal(props) {
                     fontWeight: 400,
                     fontSize: '16px',
                     mt: '8px',
-                    ':hover': {
-                      cursor: 'pointer'
-                    }
+                    ':hover': { cursor: 'pointer' }
                   }}
                 >
                   Visualizar publicação
@@ -163,7 +149,7 @@ export default function NewProjectModal(props) {
             </form>
           </DialogContent>
           <DialogActions sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <Button color="secondary" variant="contained" onClick={handleSave}>
+            <Button color="secondary" variant="contained" onClick={handleEdit}>
               Salvar
             </Button>
             <Button color="secondary" variant="contained" onClick={handleClose}>
@@ -173,7 +159,7 @@ export default function NewProjectModal(props) {
         </div>
       </Dialog>
       <AlertModal
-        text="Projeto adicionado com sucesso!"
+        text="Edição concluída com sucesso!"
         visible={alertModalVisible}
         onClose={closeAlertModal}
       ></AlertModal>
@@ -182,5 +168,6 @@ export default function NewProjectModal(props) {
         onClose={closePreviewModal}
       ></PreviewProjectModal>
     </>
+    // project={project} TODO: passar o form como propriedade
   )
 }

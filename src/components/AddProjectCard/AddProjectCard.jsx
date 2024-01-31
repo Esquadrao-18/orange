@@ -1,7 +1,7 @@
 import { Collections } from '@mui/icons-material'
 import { CardContent, IconButton, Typography } from '@mui/material'
 import { useState } from 'react'
-import NewProject from '../../modals/NewProjectModal/NewProjectModal'
+import NewProjectModal from '../../modals/NewProjectModal/NewProjectModal'
 
 export default function AddProjectCard(props) {
   const { isModal } = props
@@ -9,10 +9,11 @@ export default function AddProjectCard(props) {
   function handleOpenModalAddProject() {
     setModalVisible(true)
   }
+  function handleCloseModalAddProject() {
+    setModalVisible(false)
+  }
   return (
     <>
-      <NewProject visible={modalVisible} onClose={setModalVisible} />
-
       <CardContent
         sx={{
           padding: 4,
@@ -55,6 +56,10 @@ export default function AddProjectCard(props) {
           Compartilhe seu talento com milhares de pessoas
         </Typography>
       </CardContent>
+      <NewProjectModal
+        visible={modalVisible}
+        onClose={handleCloseModalAddProject}
+      />
     </>
   )
 }
