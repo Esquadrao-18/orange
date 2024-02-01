@@ -1,0 +1,14 @@
+@media only screen and (min-width: 600px) {
+  .container-dialog {
+    width: 70vw;
+    height: 522px;
+    margin: 24px 32px;
+  }
+}
+@media only screen and (min-width: 300px) and (max-width: 797px) {
+  .container-dialog {
+    width: 80vw;
+    height: 859px;
+    margin: 16px 0px 40px;
+  }
+}
