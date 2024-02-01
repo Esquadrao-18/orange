@@ -1,11 +1,13 @@
 import Banner from "../../components/Banner/banner"
 import loginBanner from "../../assets/login-banner.svg"
 import { TextField , Button, InputAdornment, IconButton, Snackbar, Alert } from "@mui/material"
-import iconGoogle from "../../assets/icon-google.svg"
 import { useForm, Controller } from "react-hook-form"
 import { useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
+import { jwtDecode } from "jwt-decode"
+
 
 function Login () {
 
@@ -13,6 +15,8 @@ function Login () {
         const { errors } = formState;
         const [showPassword, setShowPassword] = useState(false);
         const [loginError, setLoginError] = useState(false);
+
+        const googleClientId = import.meta.env.REACT_APP_GOOGLE_CLIENT_ID;
 
         const onSubmit = (data) => {
 
@@ -36,18 +40,25 @@ function Login () {
                 <Banner src={loginBanner} />
             </section>
             
-            <section className="flex flex-col justify-center items-center h-screen mx-auto font-sans: Roboto">
+            <section className="flex flex-col justify-center gap-8 items-center h-screen mx-auto font-sans: Roboto">
                 
-                <h3 className="text-2xl sm:text-5xl text-[#222244]">
+                <h3 className="text-2xl sm:text-5xl text-[#222244] text-nowrap">
                     Entre no Orange Portfólio
                 </h3>
 
-                <button className="btn btn-secondary my-8 flex text-sm p-3 items-start Neutral 
-                 bg-white rounded-md shadow-md">
-                    <img src={iconGoogle} className="mr-4"/>
-                    <span className="font-bold text-[#0000008A]"> Entrar com o Google</span>
-                </button>
-                
+                <GoogleOAuthProvider clientId={googleClientId}>
+                    <GoogleLogin
+                        onSuccess={credentialResponse => {
+                            const credentialResponseDecoded = jwtDecode(credentialResponse.credential);
+                            console.log(credentialResponseDecoded);
+                        }}
+                        onError={() => {
+                            console.log('Login Failed');
+                        }}
+                    />                
+                </GoogleOAuthProvider>  
+
+
                 <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4 w-80 sm:w-full" >
 
                     <h5 className="lg:text-2xl pb-2 text-[#515255]">
@@ -66,7 +77,6 @@ function Login () {
                             {...field}
                             error={!!errors.email}
                             helperText={errors.email ? "Informe um e-mail válido" : ""}
-
                         />
                         )}
                     />
@@ -107,7 +117,7 @@ function Login () {
                     Entrar
                     </Button>
 
-                    <a className="text-[#818388]" >Cadastre-se</a>             
+                    <a href="" className="text-[#818388]" >Cadastre-se</a>             
 
                 </form>
 
@@ -118,7 +128,7 @@ function Login () {
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 >
 
-                    <Alert variant="filled" severity="error" onClose={handleCloseSnackbar} sx={{ width: '95%' }}>
+                    <Alert variant="filled" severity="error" onClose={handleCloseSnackbar} sx={{ width: '95%'  }}>
                         Login ou senha inválidos. Tente novamente!
                     </Alert>
 
