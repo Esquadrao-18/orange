@@ -41,9 +41,9 @@ function Login () {
                 <Banner src={loginBanner} />
             </section>
             
-            <section className="flex flex-col justify-center gap-8 items-center h-screen mx-auto font-sans: Roboto">
+            <section className="flex flex-col justify-center h-screen gap-8 items-center mx-auto font-sans: Roboto">
                 
-                <h3 className="text-2xl sm:text-5xl text-[#222244] text-nowrap">
+                <h3 className="text-2xl sm:text-5xl mt-12 text-[#222244] text-nowrap">
                     Entre no Orange Portfólio
                 </h3>
 
@@ -77,7 +77,7 @@ function Login () {
                             size="large"
                             {...field}
                             error={!!errors.email}
-                            helperText={errors.email ? "Informe um e-mail válido" : ""}
+                            helperText={errors.email ? "Informe um e-mail válido" : undefined}
                         />
                         )}
                     />
@@ -94,7 +94,7 @@ function Login () {
                             autoComplete="current-password"
                             {...field}
                             error={!!errors.password}
-                            helperText={errors.password ? "Informe sua senha" : ""}
+                            helperText={errors.password ? "Informe sua senha" : undefined}
                             InputProps={{
                                 endAdornment: (
                                 <InputAdornment position="end">
