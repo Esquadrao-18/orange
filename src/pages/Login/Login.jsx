@@ -10,7 +10,11 @@ import {
 } from '@mui/material'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { jwtDecode } from "jwt-decode"
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Link } from "react-router-dom"
+import loginBanner from "../../assets/login-banner.svg"
+import Banner from '../../components/Banner/Banner'
 
 
 function Login () {
