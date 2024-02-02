@@ -1,6 +1,6 @@
 import Banner from "../../components/Banner/banner"
 import signUpBanner from "../../assets/sign-up-banner.svg"
-import { TextField , Button, InputAdornment, IconButton, FormHelperText } from "@mui/material"
+import { TextField, Button, InputAdornment, IconButton, FormHelperText, Snackbar, Alert} from "@mui/material"
 import { useForm, Controller } from "react-hook-form"
 import { useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -11,22 +11,28 @@ import { Link } from "react-router-dom"
 
 function SignUp () {
 
-
         const { control, handleSubmit, formState } = useForm();
         const { errors } = formState;
         const [showPassword, setShowPassword] = useState(false);
+        const [signUpError, setSignUpError] = useState(false);
+        const [loginSuccess, setLoginSuccess] = useState(false);
 
-
-
-        const onSubmit = (data) => {
-
-            console.log(data);
-        };
+        const onSubmit = (data) => {           
+            if (data.email === 'camis@gmail.com' && data.password === 'aA@123bb') {
+                setLoginSuccess(true);
+                } else {
+                setSignUpError(true);
+            }
+        }
+    
         const handleTogglePasswordVisibility = () => {
             setShowPassword(!showPassword);
         };
-           
 
+        const handleCloseSnackbar = () => {
+            setSignUpError(false);
+            setLoginSuccess(false);
+        };
 
     return (
         <main className="flex">
@@ -134,8 +140,7 @@ function SignUp () {
                                     {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                     </IconButton>
                                 </InputAdornment>
-
-                                ),
+                                )
                             }}
                             
                         />
@@ -163,6 +168,28 @@ function SignUp () {
 
                 </form>
 
+                <Snackbar
+                    open={signUpError}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                    <Alert   variant="filled" severity="error" onClose={handleCloseSnackbar} sx={{ width: '95%'  }}>
+                        Ocorreu um erro ao tentar realizar o cadastro
+                    </Alert>
+                </Snackbar>
+
+
+                <Snackbar
+                    open={loginSuccess}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                    <Alert variant="filled" severity="success" onClose={handleCloseSnackbar} sx={{ width: '100%'  }}>
+                        Cadastro feito com sucesso
+                    </Alert>
+                </Snackbar>
 
 
 
