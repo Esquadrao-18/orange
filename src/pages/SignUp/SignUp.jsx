@@ -40,9 +40,9 @@ function SignUp () {
             <Banner src={signUpBanner} />
             </section>
            
-            <section className="flex flex-col justify-center gap-8 items-center mx-auto font-sans: Roboto">
+            <section className="flex flex-col justify-center h-screen mt-10 gap-8 items-center mx-auto font-sans: Roboto">
                
-                <h3 className="text-2xl sm:text-5xl text-[#222244] mt-10 text-nowrap">
+                <h3 className="text-2xl sm:text-5xl text-[#222244]  text-nowrap">
                     Cadastre-se
                 </h3>
 
