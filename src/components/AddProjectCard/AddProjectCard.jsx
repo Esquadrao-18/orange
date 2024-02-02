@@ -12,6 +12,7 @@ export default function AddProjectCard(props) {
   function handleCloseModalAddProject() {
     setModalVisible(false)
   }
+
   return (
     <>
       <CardContent

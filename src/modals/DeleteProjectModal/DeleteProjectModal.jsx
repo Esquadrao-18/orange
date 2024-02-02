@@ -9,14 +9,15 @@ import { useState } from 'react'
 import AlertModal from '../AlertModal/AlertModal'
 
 export default function DeleteProjectModal(props) {
-  const { onClose, visible } = props
+  const { onClose, visible, currentProject } = props
   const [alertModalVisible, setAlertModalVisible] = useState(false)
 
   const closeAlertModal = () => {
     setAlertModalVisible(false)
   }
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     // TODO: após resposta
+    console.log('Deletar projeto do seguinte id:', id)
     onClose()
     setAlertModalVisible(true)
   }
@@ -46,7 +47,7 @@ export default function DeleteProjectModal(props) {
               color="secondary"
               variant="contained"
               autoFocus
-              onClick={handleDelete}
+              onClick={() => handleDelete(currentProject.id)}
             >
               Excluir
             </Button>

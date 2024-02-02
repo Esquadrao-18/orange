@@ -30,9 +30,9 @@ export default function PreviewProjectModal(props) {
         >
           <Close></Close>
         </IconButton>
-        <div className="container-dialog py-2 px-4 h-full flex flex-col">
+        <div className="container-dialog py-4 px-1 mx-[-1] h-full flex flex-col overflow-x-hidden">
           <section className="flex justify-between items-center">
-            <div className="gap-2 items-center md:flex hidden">
+            <div className="gap-2 items-center md:flex hidden ">
               <figure>
                 <img className="w-10 rounded-full" src={profileImg} />
               </figure>
@@ -45,7 +45,7 @@ export default function PreviewProjectModal(props) {
                 </p>
               </div>
             </div>
-            <h3 className="text-2xl md:w-fit w-full text-center">
+            <h3 className="text-2xl md:w-fit w-full text-center mt-2">
               Ecommerce One Page
             </h3>
             <div className="md:flex hidden">
@@ -59,15 +59,15 @@ export default function PreviewProjectModal(props) {
               ></Chip>
             </div>
           </section>
-          <DialogContent>
-            <figure className="w-full flex justify-center">
+          <DialogContent sx={{ padding: '2 3' }}>
+            <figure className="flex justify-center">
               <img
                 className="w-full"
                 style={{
                   maxWidth: '838px',
-                  minWidth: '312px',
+                  minWidth: '260px',
                   minHeight: '258px',
-                  maxHeight: '585px'
+                  maxHeight: '430px'
                 }}
                 src="https://source.unsplash.com/featured/389x258"
                 alt="Imagem do projeto"
@@ -99,7 +99,7 @@ export default function PreviewProjectModal(props) {
               </div>
             </div>
           </DialogContent>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 p-1">
             <Typography
               variant="p"
               color="#303133"

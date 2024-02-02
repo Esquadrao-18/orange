@@ -9,7 +9,7 @@ const projects = [
   {
     id: 1,
     img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome ',
+    title: 'Nome ',
     link: 'github.com/algumacoisa',
     description: 'Esse é meu projeto',
     date: '12/12',
@@ -18,7 +18,7 @@ const projects = [
   {
     id: 2,
     img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
+    title: 'Nome Projeto',
     link: 'github.com/algumacoisa',
     description: 'Esse é meu projeto',
     date: '12/12',
@@ -27,7 +27,7 @@ const projects = [
   {
     id: 3,
     img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
+    title: 'Nome Projeto',
     link: 'github.com/algumacoisa',
     description: 'Esse é meu projeto',
     date: '12/12',
