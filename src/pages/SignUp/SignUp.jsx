@@ -1,4 +1,6 @@
-import { TextField , Button, InputAdornment, IconButton } from "@mui/material"
+import Banner from "../../components/Banner/banner"
+import signUpBanner from "../../assets/sign-up-banner.svg"
+import { TextField , Button, InputAdornment, IconButton, FormHelperText } from "@mui/material"
 import { useForm, Controller } from "react-hook-form"
 import { useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -29,22 +31,24 @@ function SignUp () {
     return (
         <main className="flex">
             <section>
+            <Banner src={signUpBanner} />
             </section>
            
-            <section className="flex flex-col justify-center gap-8 items-center h-screen mx-auto font-sans: Roboto">
+            <section className="flex flex-col justify-center gap-8 items-center mx-auto font-sans: Roboto">
                
-                <h3 className="text-2xl sm:text-5xl text-[#222244] text-nowrap">
+                <h3 className="text-2xl sm:text-5xl text-[#222244] mt-10 text-nowrap">
                     Cadastre-se
                 </h3>
 
-
-                <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4 w-full" >
+                <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4 w-80 sm:w-full" >
                
                 <div className="flex flex-col sm:flex-row gap-3">
                     <Controller
                             name="name"
                             control={control}
-                            rules={{ required: true}}
+                            rules={{ required: true,
+                                pattern: /^[A-Za-z' ]+$/,
+                                minLength: 2 }}
                             render={({ field }) => (
                             <TextField
                                 label="Nome*"
@@ -52,17 +56,23 @@ function SignUp () {
                                 size="large"
                                 {...field}
                                 error={!!errors.name}
-                                helperText={errors.name ?  "Campo nome obrigatório" : ""}
-
+                                helperText={errors.name ?  (
+                                    <>
+                                        Informe um nome válido (mínimo 2 caracteres).
+                                        <br />
+                                        Apenas letras, espaços e apóstrofos são permitidos.
+                                    </>
+                                ) : undefined}
                             />
                             )}
-                        />
-
+                    />
 
                     <Controller
                             name="surname"
                             control={control}
-                            rules={{ required: true }}
+                            rules={{ required: true,
+                            pattern: /^[A-Za-z' ]+$/,
+                            minLength: 2 }}
                             render={({ field }) => (
                             <TextField
                                 label="Sobrenome*"
@@ -70,16 +80,22 @@ function SignUp () {
                                 size="large"
                                 {...field}
                                 error={!!errors.surname}
-                                helperText={errors.surname ?  "Sobrenome obrigatório" : ""}
-
+                                helperText={errors.surname ?  (
+                                    <>
+                                        Informe um sobrenome válido (mínimo 2 caracteres).
+                                        <br />
+                                        Apenas letras, espaços e apóstrofos são permitidos.
+                                    </>
+                                ) : undefined}
                             />
                             )}
-                        />                                      
+                    />                                      
                 </div>
                     <Controller
                         name="email"
                         control={control}
-                        rules={{ required: true , pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/ }}
+                        rules={{ required: true , 
+                        pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/}}
                         render={({ field }) => (
                         <TextField
                             label="Email address"
@@ -87,7 +103,7 @@ function SignUp () {
                             size="large"
                             {...field}
                             error={!!errors.email}
-                            helperText={errors.email ? "Informe um e-mail válido" : ""}
+                            helperText={errors.email ? "Informe um e-mail válido" : undefined}
                         />
                         )}
                     />
@@ -95,7 +111,9 @@ function SignUp () {
                     <Controller
                             name="password"
                             control={control}
-                            rules={{ required: "true"  }}
+                            rules={{ required: true,
+                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&!#])[A-Za-z\d@$!%*?&!#]/,
+                            minLength: 8 }}
                             render={({ field }) => (
                         <TextField
                             id="outlined-password-input"
@@ -104,7 +122,7 @@ function SignUp () {
                             autoComplete="current-password"
                             {...field}
                             error={!!errors.password}
-                            helperText={errors.password ? "Informe sua senha" : ""}
+                            helperText={errors.password ? "Informe uma senha segura" : undefined}
                             InputProps={{
                                 endAdornment: (
                                 <InputAdornment position="end">
@@ -116,11 +134,24 @@ function SignUp () {
                                     {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                     </IconButton>
                                 </InputAdornment>
+
                                 ),
                             }}
+                            
                         />
                     )}
-                    />                                  
+                    />
+                    <FormHelperText>Para sua segurança, a senha deve conter pelo menos:
+                    <br/>
+                    - Mínimo de 8 caracteres
+                    <br/>
+                    - Ao menos uma letra maíuscula e uma minúscula
+                    <br/>
+                    - Ao menos 1 número
+                    <br/>
+                    - Ao menos 1 caractere especial: @$!%*?&!#
+    
+                    </FormHelperText>                                  
 
                     <Button type="submit" variant="contained"
                     color="secondary"
