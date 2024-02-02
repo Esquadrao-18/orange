@@ -29,11 +29,11 @@ export default function ProjectCard(props) {
   }
 
   function handleEditClick() {
-    projectContext.handleEditModal({ tags: project.tags })
+    projectContext.handleEditModal(project)
     handleCloseSubMenu()
   }
   function handleDeleteClick() {
-    projectContext.handleDeleteModal({})
+    projectContext.handleDeleteModal(project)
     handleCloseSubMenu()
   }
 
@@ -177,13 +177,12 @@ export default function ProjectCard(props) {
               {cardUser()}
             </div>
           </div>
-          {isPersonal ? (
-            <div className="flex gap-2">
-              {project.tags.map((tag, index) => (
-                <Chip key={index} label={tag} sx={{ fontSize: 13 }} />
-              ))}
-            </div>
-          ) : undefined}
+
+          <div className="flex gap-2">
+            {project.tags.map((tag, index) => (
+              <Chip key={index} label={tag} sx={{ fontSize: 13 }} />
+            ))}
+          </div>
         </section>
       </Card>
       <PreviewProjectModal

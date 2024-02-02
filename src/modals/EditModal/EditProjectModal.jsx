@@ -1,3 +1,4 @@
+import { useTheme } from '@emotion/react'
 import { Collections } from '@mui/icons-material'
 import {
   Button,
@@ -9,9 +10,11 @@ import {
   DialogTitle,
   IconButton,
   TextField,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import AlertModal from '../AlertModal/AlertModal'
 import PreviewProjectModal from '../PreviewProjectModal/PreviewProjectModal'
 
@@ -20,13 +23,16 @@ export default function EditProjectModal(props) {
   const { currentProject, onClose, visible } = props
   const [alertModalVisible, setAlertModalVisible] = useState(false)
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
-  const fileUploadRef = useRef(null)
+  const { control, getValues, reset } = useForm()
 
+  const fileUploadRef = useRef(null)
   const handleEdit = () => {
-    onClose()
+    console.log(getValues())
+    handleClose()
     setAlertModalVisible(true)
   }
   const handleClose = () => {
+    reset()
     onClose()
   }
   const closeAlertModal = () => {
@@ -39,6 +45,14 @@ export default function EditProjectModal(props) {
   const closePreviewModal = () => {
     setPreviewModalVisible(false)
   }
+
+  useEffect(() => {
+    if (currentProject) {
+      reset(currentProject)
+    }
+  }, [currentProject, reset])
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>
       <Dialog maxWidth={false} open={visible}>
@@ -47,11 +61,7 @@ export default function EditProjectModal(props) {
             Editar Projeto
           </DialogTitle>
           <DialogContent>
-            <form
-              // onSubmit={handleSubmit(project)}
-              className="flex flex-col-reverse items-center justify-center md:flex-row gap-6 form"
-              style={{}}
-            >
+            <form className="flex flex-col-reverse items-center justify-center md:flex-row gap-6 form">
               <section className="w-full">
                 <DialogContentText
                   sx={{
@@ -63,7 +73,7 @@ export default function EditProjectModal(props) {
                 >
                   Selecione o conteúdo que você deseja fazer upload
                 </DialogContentText>
-
+                {/* TODO: Inserir imagem do projeto aqui */}
                 <CardContent
                   sx={{
                     padding: 4,
@@ -78,12 +88,19 @@ export default function EditProjectModal(props) {
                     minWidth: '100%'
                   }}
                 >
-                  <input
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    type="file"
-                    id="input-file"
-                    ref={fileUploadRef}
+                  <Controller
+                    name="imageFile"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        multiple={false}
+                        ref={fileUploadRef}
+                      />
+                    )}
                   />
                   <IconButton
                     onClick={() =>
@@ -116,40 +133,74 @@ export default function EditProjectModal(props) {
                     fontWeight: 400,
                     fontSize: '16px',
                     mt: '8px',
-                    ':hover': { cursor: 'pointer' }
+                    ':hover': {
+                      cursor: 'pointer'
+                    }
                   }}
                 >
                   Visualizar publicação
                 </Typography>
               </section>
               <section className="flex flex-col gap-4 w-9/12 sm:w-full items-center inputs-container">
-                <TextField
-                  label="Título"
-                  fullWidth
-                  variant="outlined"
-                ></TextField>
-                <TextField
-                  label="Tags"
-                  fullWidth
-                  variant="outlined"
-                ></TextField>
-                <TextField
-                  label="Link"
-                  fullWidth
-                  variant="outlined"
-                ></TextField>
-                <TextField
-                  label="Descrição"
-                  fullWidth
-                  variant="outlined"
-                  multiline={true}
-                  rows={3}
-                ></TextField>
+                <Controller
+                  name="title"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Título"
+                      style={{ width: '100%' }}
+                    />
+                  )}
+                />
+                <Controller
+                  name="tags"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Tags"
+                      style={{ width: '100%' }}
+                    />
+                  )}
+                />
+                <Controller
+                  name="link"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Link"
+                      style={{ width: '100%' }}
+                    />
+                  )}
+                />
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Descrição"
+                      style={{ width: '100%' }}
+                    />
+                  )}
+                />
               </section>
             </form>
           </DialogContent>
-          <DialogActions sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <Button color="secondary" variant="contained" onClick={handleEdit}>
+          <DialogActions
+            sx={{
+              display: 'flex',
+              justifyContent: isSmallScreen ? 'center' : 'flex-start'
+            }}
+          >
+            <Button
+              type="submit"
+              color="secondary"
+              variant="contained"
+              onClick={() => handleEdit()}
+            >
               Salvar
             </Button>
             <Button color="secondary" variant="contained" onClick={handleClose}>

@@ -1,10 +1,13 @@
-import Banner from "../../components/Banner/banner"
-import loginBanner from "../../assets/login-banner.svg"
-import { TextField , Button, InputAdornment, IconButton, Snackbar, Alert } from "@mui/material"
-import { useForm, Controller } from "react-hook-form"
-import { useState } from "react"
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import {
+  Alert,
+  Button,
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  TextField
+} from '@mui/material'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { jwtDecode } from "jwt-decode"
 import { Link } from "react-router-dom"
@@ -142,5 +145,3 @@ function Login () {
 }
 
 export default Login
-
-
