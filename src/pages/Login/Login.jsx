@@ -49,6 +49,16 @@ function Login() {
     }
   }
 
+  const [, setUser] = useState(null)
+  const handleLoginSuccess = (credentialResponse) => {
+    const credentialResponseDecoded = jwtDecode(credentialResponse.credential)
+    localStorage.setItem('token', credentialResponseDecoded.access_token)
+    setUser(credentialResponseDecoded)
+  }
+  const handleLoginFailure = () => {
+    setLoginError(true)
+  }
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
@@ -70,15 +80,8 @@ function Login() {
 
         <GoogleOAuthProvider clientId={googleClientId}>
           <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              const credentialResponseDecoded = jwtDecode(
-                credentialResponse.credential
-              )
-              console.log(credentialResponseDecoded)
-            }}
-            onError={() => {
-              console.log('Login Failed')
-            }}
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginFailure}
           />
         </GoogleOAuthProvider>
 
