@@ -1,56 +1,61 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { LoadingButton } from '@mui/lab'
 import {
   Alert,
-  Button,
   IconButton,
   InputAdornment,
   Snackbar,
-  TextField,
-} from "@mui/material";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import loginBanner from "../../assets/login-banner.svg";
-import Banner from "../../components/Banner/banner";
-import orangeAPI from "../../api/config";
+  TextField
+} from '@mui/material'
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
+import { jwtDecode } from 'jwt-decode'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom/dist'
+import orangeAPI from '../../api/config'
+import loginBanner from '../../assets/login-banner.svg'
+import Banner from '../../components/Banner/banner'
+import { useAuth } from '../../hooks/useAuth'
 
 function Login() {
-  const { control, handleSubmit, formState } = useForm(
-    {
-      defaultValues: {
-        email: "",
-        password: "",
-      },
+  const { login } = useAuth()
+  const { control, handleSubmit, formState } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
     }
-  );
-  const { errors } = formState;
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState(false);
+  })
+  const { errors } = formState
+  const [showPassword, setShowPassword] = useState(false)
+  const [loginError, setLoginError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const googleClientId = import.meta.env.VITE_AUTH_GOOGLE_KEY;
+  const googleClientId = import.meta.env.VITE_AUTH_GOOGLE_KEY
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
-      const response = await orangeAPI.post("/signin", {
-        email: data.email,
-        password: data.password,
-      });
-      console.log(response);
-      localStorage.setItem("token", JSON.stringify(response.data.token));
+      const response = await orangeAPI.post('/signin', data)
+      if (response.status === 200) {
+        login(response.data.token)
+        navigate('/meus-projetos')
+        setIsLoading(false)
+      }
     } catch (error) {
-      setLoginError(true);
+      setIsLoading(false)
+      setLoginError(true)
     }
-  };
+  }
+
   const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   const handleCloseSnackbar = () => {
-    setLoginError(false);
-  };
+    setLoginError(false)
+  }
 
   return (
     <main className="flex">
@@ -68,11 +73,11 @@ function Login() {
             onSuccess={(credentialResponse) => {
               const credentialResponseDecoded = jwtDecode(
                 credentialResponse.credential
-              );
-              console.log(credentialResponseDecoded);
+              )
+              console.log(credentialResponseDecoded)
             }}
             onError={() => {
-              console.log("Login Failed");
+              console.log('Login Failed')
             }}
           />
         </GoogleOAuthProvider>
@@ -98,7 +103,7 @@ function Login() {
                 {...field}
                 error={!!errors.email}
                 helperText={
-                  errors.email ? "Informe um e-mail válido" : undefined
+                  errors.email ? 'Informe um e-mail válido' : undefined
                 }
               />
             )}
@@ -107,16 +112,16 @@ function Login() {
           <Controller
             name="password"
             control={control}
-            rules={{ required: "true" }}
+            rules={{ required: 'true' }}
             render={({ field }) => (
               <TextField
                 id="outlined-password-input"
                 label="Password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 {...field}
                 error={!!errors.password}
-                helperText={errors.password ? "Informe sua senha" : undefined}
+                helperText={errors.password ? 'Informe sua senha' : undefined}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -132,20 +137,20 @@ function Login() {
                         )}
                       </IconButton>
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
           />
-
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
             color="secondary"
             size="medium"
+            loading={isLoading}
           >
             Entrar
-          </Button>
+          </LoadingButton>
 
           <Link to="/cadastrar" className="text-[#818388]">
             Cadastre-se
@@ -156,20 +161,20 @@ function Login() {
           open={loginError}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
             variant="filled"
             severity="error"
             onClose={handleCloseSnackbar}
-            sx={{ width: "95%" }}
+            sx={{ width: '95%' }}
           >
             Login ou senha inválidos. Tente novamente!
           </Alert>
         </Snackbar>
       </section>
     </main>
-  );
+  )
 }
 
-export default Login;
+export default Login

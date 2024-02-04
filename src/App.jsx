@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@emotion/react'
 import { createTheme } from '@mui/material'
-import { BrowserRouter } from 'react-router-dom'
-import Router from './routes/routes'
+import { AuthProvider } from './context/AuthContext'
+import AppRouter from './routes/AppRouter'
 const secondary = {
   main: '#FF5522',
   dark: '#CC4400',
@@ -31,11 +31,9 @@ const theme = createTheme({
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <div className="App overflow-x-hidden">
-          <Router />
-        </div>
-      </BrowserRouter>
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </ThemeProvider>
   )
 }
