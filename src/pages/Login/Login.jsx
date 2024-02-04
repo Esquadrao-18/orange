@@ -9,7 +9,6 @@ import {
   TextField
 } from '@mui/material'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom/dist'
@@ -19,7 +18,7 @@ import Banner from '../../components/Banner/banner'
 import { useAuth } from '../../hooks/useAuth'
 
 function Login() {
-  const { login } = useAuth()
+  const { login, googleLogin } = useAuth()
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       email: '',
@@ -56,7 +55,16 @@ function Login() {
   const handleCloseSnackbar = () => {
     setLoginError(false)
   }
+  const handleLoginSuccess = (credentialResponse) => {
+    setIsLoading(true)
+    googleLogin(credentialResponse.credential)
+    navigate('/meus-projetos')
+    setIsLoading(false)
+  }
 
+  const handleLoginFailure = () => {
+    setLoginError(true)
+  }
   return (
     <main className="flex">
       <section>
@@ -70,15 +78,8 @@ function Login() {
 
         <GoogleOAuthProvider clientId={googleClientId}>
           <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              const credentialResponseDecoded = jwtDecode(
-                credentialResponse.credential
-              )
-              console.log(credentialResponseDecoded)
-            }}
-            onError={() => {
-              console.log('Login Failed')
-            }}
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginFailure}
           />
         </GoogleOAuthProvider>
 

@@ -37,6 +37,8 @@ function NavBar() {
     handleCloseUserMenu()
   }
 
+  const userImg = userData.picture || profileImg
+
   return (
     <nav
       className="w-full flex py-4 px-[30px] items-center justify-between"
@@ -124,7 +126,7 @@ function NavBar() {
       <section className="flex gap-4">
         <img
           className="w-10 rounded-full"
-          src={profileImg}
+          src={userImg}
           alt="Avatar de uma garota no estilo Pixar"
         />
         <img
