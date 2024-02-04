@@ -17,7 +17,16 @@ import { Link } from "react-router-dom";
 import orangeAPI from "../../api/config";
 
 function SignUp() {
-  const { control, handleSubmit, formState } = useForm();
+  const { control, handleSubmit, formState } = useForm(
+    {
+      defaultValues: {
+        name: "",
+        lastName: "",
+        email: "",
+        password: "",
+      },
+    }
+  );
   const { errors } = formState;
   const [showPassword, setShowPassword] = useState(false);
   const [signUpError, setSignUpError] = useState(false);
@@ -89,7 +98,7 @@ function SignUp() {
             />
 
             <Controller
-              name="surname"
+              name="lastName"
               control={control}
               rules={{ required: true, pattern: /^[A-Za-z' ]+$/, minLength: 2 }}
               render={({ field }) => (
@@ -98,9 +107,9 @@ function SignUp() {
                   variant="outlined"
                   size="large"
                   {...field}
-                  error={!!errors.surname}
+                  error={!!errors.lastName}
                   helperText={
-                    errors.surname ? (
+                    errors.lastName ? (
                       <>
                         Informe um sobrenome válido (mínimo 2 caracteres).
                         <br />
