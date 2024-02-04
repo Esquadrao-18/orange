@@ -9,7 +9,6 @@ import {
   TextField
 } from '@mui/material'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom/dist'
@@ -19,7 +18,7 @@ import Banner from '../../components/Banner/banner'
 import { useAuth } from '../../hooks/useAuth'
 
 function Login() {
-  const { login } = useAuth()
+  const { login, googleLogin } = useAuth()
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       email: '',
@@ -49,16 +48,6 @@ function Login() {
     }
   }
 
-  const [, setUser] = useState(null)
-  const handleLoginSuccess = (credentialResponse) => {
-    const credentialResponseDecoded = jwtDecode(credentialResponse.credential)
-    localStorage.setItem('token', credentialResponseDecoded.access_token)
-    setUser(credentialResponseDecoded)
-  }
-  const handleLoginFailure = () => {
-    setLoginError(true)
-  }
-
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword)
   }
@@ -66,7 +55,16 @@ function Login() {
   const handleCloseSnackbar = () => {
     setLoginError(false)
   }
+  const handleLoginSuccess = (credentialResponse) => {
+    setIsLoading(true)
+    googleLogin(credentialResponse.credential)
+    navigate('/meus-projetos')
+    setIsLoading(false)
+  }
 
+  const handleLoginFailure = () => {
+    setLoginError(true)
+  }
   return (
     <main className="flex">
       <section>

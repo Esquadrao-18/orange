@@ -47,6 +47,8 @@ function MyProjects() {
     setModalVisible(false)
   }
 
+  const userImg = userData.picture || profileImg
+
   return (
     <>
       <section className="w-screen flex flex-col px-8 items-center ">
@@ -54,7 +56,7 @@ function MyProjects() {
           <figure>
             <img
               className="rounded-full"
-              src={profileImg}
+              src={userImg}
               alt="Avatar de uma garota no estilo Pixar"
             />
           </figure>
