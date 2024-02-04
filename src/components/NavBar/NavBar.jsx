@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 import orangeLogo from '../../assets/logo-orange.svg'
 import notificationsIcon from '../../assets/notifications-icon.svg'
 import profileImg from '../../assets/profile-image.svg'
+import { useAuth } from '../../hooks/useAuth'
 import './style.css'
 
 function NavBar() {
@@ -22,6 +23,7 @@ function NavBar() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const [anchorElUser, setAnchorElUser] = useState(null)
+  const { userData, logout } = useAuth()
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget)
@@ -29,6 +31,12 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+
+  const handleLogout = () => {
+    logout()
+    handleCloseUserMenu()
+  }
+
   return (
     <nav
       className="w-full flex py-4 px-[30px] items-center justify-between"
@@ -69,11 +77,11 @@ function NavBar() {
           onClose={handleCloseUserMenu}
         >
           <MenuItem onClick={handleCloseUserMenu}>
-            <Typography>Camila</Typography>
+            <Typography>{userData.name}</Typography>
           </MenuItem>
           <MenuItem onClick={handleCloseUserMenu}>
             <Typography sx={{ color: 'rgba(0, 0, 0, 0.60)', mt: -2 }}>
-              Camila.ux@gmail.com
+              {userData.email}
             </Typography>
           </MenuItem>
           <Divider />
@@ -89,7 +97,7 @@ function NavBar() {
           </Link>
           <Divider />
           <Link to="/">
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>

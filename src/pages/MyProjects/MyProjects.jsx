@@ -2,9 +2,9 @@ import { Button } from '@mui/material'
 import { useState } from 'react'
 import profileImg from '../../assets/profile-image.svg'
 import ProjectsList from '../../components/ProjectsList/ProjectsList'
+import { useAuth } from '../../hooks/useAuth'
 import NewProjectModal from '../../modals/NewProjectModal/NewProjectModal'
 import './style.css'
-
 const projects = [
   {
     id: 1,
@@ -36,13 +36,17 @@ const projects = [
 ]
 
 function MyProjects() {
+  const { userData } = useAuth()
+
   const [modalVisible, setModalVisible] = useState(false)
+
   function handleOpenModalAddProject() {
     setModalVisible(true)
   }
   function handleCloseModalAddProject() {
     setModalVisible(false)
   }
+
   return (
     <>
       <section className="w-screen flex flex-col px-8 items-center ">
@@ -56,7 +60,7 @@ function MyProjects() {
           </figure>
           <div className="user-infos">
             <h5 className="text-2xl mb-4" style={{ color: '#303133' }}>
-              Camila Soares
+              {userData?.name}&nbsp;{userData?.lastName}
             </h5>
             <p className="mb-6 opacity-50	">Brasil</p>
             <Button
