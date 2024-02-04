@@ -14,16 +14,23 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import loginBanner from "../../assets/login-banner.svg";
-import Banner from "../../components/Banner/Banner";
+import Banner from "../../components/Banner/banner";
 import orangeAPI from "../../api/config";
 
 function Login() {
-  const { control, handleSubmit, formState } = useForm();
+  const { control, handleSubmit, formState } = useForm(
+    {
+      defaultValues: {
+        email: "",
+        password: "",
+      },
+    }
+  );
   const { errors } = formState;
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
 
-  const googleClientId = import.meta.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const googleClientId = import.meta.env.VITE_AUTH_GOOGLE_KEY;
 
   const onSubmit = async (data) => {
     try {
