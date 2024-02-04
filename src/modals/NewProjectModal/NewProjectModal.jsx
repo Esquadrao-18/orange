@@ -21,6 +21,7 @@ import './style.css'
 
 export default function NewProjectModal(props) {
   // TODO: Implementar useForm
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const [alertModalVisible, setAlertModalVisible] = useState(false)
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
@@ -31,11 +32,13 @@ export default function NewProjectModal(props) {
   function handleClose() {
     reset()
     onClose()
+    setSelectedImage(null)
   }
   function handleSave() {
     console.log(getValues())
     handleClose()
     setAlertModalVisible(true)
+    setSelectedImage(null)
   }
   function closeAlertModal() {
     setAlertModalVisible(false)
@@ -47,6 +50,16 @@ export default function NewProjectModal(props) {
   const closePreviewModal = () => {
     setPreviewModalVisible(false)
   }
+  const handleImage = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImage(e.target.files[0])
+    }
+  }
+
+  const removeSelectImage = () => {
+    setSelectedImage(null)
+  }
+
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
   return (
@@ -56,7 +69,7 @@ export default function NewProjectModal(props) {
         open={visible}
         sx={{ display: 'flex', justifyContent: 'center' }}
       >
-        <div className="container-dialog flex flex-col items-center">
+        <div className="container-dialog ">
           <DialogTitle sx={{ fontSize: 24, fontWeight: 400 }}>
             Adicionar projeto
           </DialogTitle>
@@ -75,71 +88,119 @@ export default function NewProjectModal(props) {
                 </DialogContentText>
                 <CardContent
                   sx={{
-                    padding: 4,
+                    padding: selectedImage ? 0 : 4,
                     backgroundColor: '#E6E9F2',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
+
                     gap: '16px',
                     maxWidth: 389,
                     height: 304,
                     minWidth: '100%'
                   }}
                 >
-                  <Controller
-                    name="imageFile"
-                    control={control}
-                    defaultValue={[]}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        multiple={false}
-                        ref={fileUploadRef}
-                      />
-                    )}
-                  />
-                  <IconButton
-                    onClick={() =>
-                      fileUploadRef.current && fileUploadRef.current.click()
-                    }
-                    disableRipple={true}
-                    sx={{
-                      ':hover': { backgroundColor: 'transparent' }
-                    }}
-                  >
-                    <Collections sx={{ fontSize: '46px', color: '#323232' }} />
-                  </IconButton>
+                  {selectedImage ? (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: 304,
 
-                  <Typography
-                    sx={{
-                      fontSize: 14,
-                      opacity: 0.6,
-                      maxWidth: 270,
-                      minWidth: 200
-                    }}
-                    component="div"
-                  >
-                    Compartilhe seu talento com milhares de pessoas
-                  </Typography>
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <img
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '100%',
+                          height: 'auto',
+                          width: 'auto',
+                          objectFit: 'contain'
+                        }}
+                        src={URL.createObjectURL(selectedImage)}
+                      ></img>
+                    </div>
+                  ) : (
+                    <>
+                      <Controller
+                        name="imageFile"
+                        control={control}
+                        defaultValue={[]}
+                        render={({ field }) => (
+                          <input
+                            {...field}
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            multiple={false}
+                            ref={fileUploadRef}
+                            onChange={handleImage}
+                          />
+                        )}
+                      />
+                      <IconButton
+                        onClick={() =>
+                          fileUploadRef.current && fileUploadRef.current.click()
+                        }
+                        disableRipple={true}
+                        sx={{
+                          ':hover': { backgroundColor: 'transparent' }
+                        }}
+                      >
+                        <Collections
+                          sx={{ fontSize: '46px', color: '#323232' }}
+                        />
+                      </IconButton>
+                      <Typography
+                        sx={{
+                          fontSize: 14,
+                          opacity: 0.6,
+                          maxWidth: 270,
+                          minWidth: 200
+                        }}
+                        component="div"
+                      >
+                        Compartilhe seu talento com milhares de pessoas
+                      </Typography>
+                    </>
+                  )}
                 </CardContent>
-                <Typography
-                  onClick={handleOpenPreviewModal}
-                  sx={{
-                    color: '#515255',
-                    fontWeight: 400,
-                    fontSize: '16px',
-                    mt: '8px',
-                    ':hover': {
-                      cursor: 'pointer'
-                    }
-                  }}
-                >
-                  Visualizar publicação
-                </Typography>
+                <div className="flex justify-between items-center">
+                  <Typography
+                    onClick={handleOpenPreviewModal}
+                    sx={{
+                      color: '#515255',
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      mt: '8px',
+                      ':hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                  >
+                    Visualizar publicação
+                  </Typography>
+                  {selectedImage && (
+                    <Typography
+                      onClick={removeSelectImage}
+                      sx={{
+                        color: '#515255',
+                        fontWeight: 400,
+                        fontSize: '16px',
+                        mt: '8px',
+                        ':hover': {
+                          cursor: 'pointer'
+                        }
+                      }}
+                    >
+                      Remover imagem
+                    </Typography>
+                  )}
+                </div>
               </section>
               <section className="flex flex-col gap-4 w-9/12 sm:w-full items-center inputs-container">
                 <Controller
