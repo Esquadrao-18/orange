@@ -61,8 +61,9 @@ export default function NewProjectModal(props) {
     const formData = new FormData()
     formData.append('title', values.title)
     formData.append('link', values.link)
-    values.tags.split(',').forEach((tag) => {
-      formData.append('tags', tag)
+    const tempTags = values.tags.split(',')
+    tempTags.forEach((tag) => {
+      formData.append('tags[]', tag.trim())
     })
     formData.append('description', values.description)
     formData.append('image', selectedImage)
@@ -84,7 +85,6 @@ export default function NewProjectModal(props) {
   }
   function closeAlertModal() {
     setAlertModalVisible(false)
-    // reload()
   }
   const handleOpenPreviewModal = () => {
     setPreviewModalVisible(true)
@@ -251,9 +251,6 @@ export default function NewProjectModal(props) {
                     />
                   )}
                 />
-                <p className="w-full text-xs mt-[-12px]">
-                  Informe no mínimo 2 tags
-                </p>
                 <Controller
                   name="link"
                   control={control}

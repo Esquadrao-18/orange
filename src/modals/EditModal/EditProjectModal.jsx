@@ -47,11 +47,16 @@ export default function EditProjectModal(props) {
     setIsLoading(true)
 
     const values = getValues()
-
+    let tempTags
+    if (values.tags.includes(',')) {
+      tempTags = values.tags.split(',')
+    } else {
+      tempTags = [values.tags]
+    }
     const projectData = {
       title: values.title,
       link: values.link,
-      tags: values.tags.split(',').map((tag) => tag.trim()),
+      tags: tempTags.map((tag) => tag.trim()),
       description: values.description
     }
 
