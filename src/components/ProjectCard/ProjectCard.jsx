@@ -11,12 +11,14 @@ import {
   useMediaQuery
 } from '@mui/material'
 import { useContext, useState } from 'react'
-import profileImg from '../../assets/profile-image.svg'
+import profileImg from '../../assets/profile-image.png'
+import { useAuth } from '../../hooks/useAuth'
 import PreviewProjectModal from '../../modals/PreviewProjectModal/PreviewProjectModal'
 import { ProjectContext } from '../ProjectsList/ProjectsList'
 
 export default function ProjectCard(props) {
   const { project, isPersonal } = props
+  const { userData } = useAuth()
   const [element, setElement] = useState(null)
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
   const projectContext = useContext(ProjectContext)
@@ -36,17 +38,27 @@ export default function ProjectCard(props) {
     projectContext.handleDeleteModal(project)
     handleCloseSubMenu()
   }
+  const handleDate = (data) => {
+    const originDate = new Date(data)
+    const month = ('0' + (originDate.getUTCMonth() + 1)).slice(-2)
+    const year = originDate.getUTCFullYear()
+    return `${month}/${year}`
+  }
 
   const cardUser = () => {
     return (
       <>
         <Typography sx={{ color: isSmallScreen ? '#303133' : '#515255' }}>
-          Camila Soares
+          {isPersonal
+            ? `${userData.name} ${userData.lastName}`
+            : project.userName}
         </Typography>
         {isSmallScreen ? undefined : (
           <Typography sx={{ color: '#515255' }}>&nbsp;•&nbsp;</Typography>
         )}
-        <Typography sx={{ color: '#515255' }}>{project.date}</Typography>
+        <Typography sx={{ color: '#515255' }}>
+          {handleDate(project.releaseDate)}
+        </Typography>
       </>
     )
   }
@@ -68,6 +80,7 @@ export default function ProjectCard(props) {
       <Card
         sx={{
           maxWidth: 389,
+          height: 'fit-content',
           position: 'relative',
           boxShadow: 'none'
         }}
@@ -156,16 +169,35 @@ export default function ProjectCard(props) {
             </Menu>{' '}
           </>
         ) : undefined}
+        <div
+          style={{
+            width: '100%',
+            height: 364,
 
-        <CardMedia
-          onClick={handleOpenPreviewModal}
-          component="img"
-          width="389"
-          height="258"
-          image={project.img}
-          sx={{ ':hover': { cursor: 'pointer' } }}
-          alt="Imagem do projeto"
-        />
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CardMedia
+            onClick={handleOpenPreviewModal}
+            component="img"
+            width="389"
+            height="200"
+            image={project.imageUrl}
+            sx={{ ':hover': { cursor: 'pointer' } }}
+            alt="Imagem do projeto"
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              height: 'auto',
+              width: 'auto',
+              objectFit: 'contain'
+            }}
+          />
+        </div>
+
         <section className="flex justify-between pt-2">
           <div className="flex items-center gap-2">
             <img src={profileImg} className="w-6 rounded-full" />
@@ -180,7 +212,7 @@ export default function ProjectCard(props) {
 
           <div className="flex gap-2">
             {project.tags.map((tag, index) => (
-              <Chip key={index} label={tag} sx={{ fontSize: 13 }} />
+              <Chip key={index} label={tag.name} sx={{ fontSize: 13 }} />
             ))}
           </div>
         </section>
@@ -188,6 +220,10 @@ export default function ProjectCard(props) {
       <PreviewProjectModal
         visible={previewModalVisible}
         onClose={closePreviewModal}
+        currentProject={project}
+        currentTags={project.tags.map((tag) => tag.name)}
+        currentImage={project?.imageUrl}
+        currentDate={project.releaseDate}
       ></PreviewProjectModal>
     </>
   )
