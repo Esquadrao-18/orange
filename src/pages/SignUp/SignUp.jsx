@@ -14,7 +14,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import orangeAPI from '../../api/config'
 import signUpBanner from '../../assets/sign-up-banner.svg'
-import Banner from '../../components/Banner/banner'
+import Banner from '../../components/Banner/Banner'
 
 function SignUp() {
   const { control, handleSubmit, formState } = useForm({
