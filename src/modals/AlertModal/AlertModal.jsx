@@ -1,7 +1,12 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 export default function AlertModal(props) {
-  const { visible, onClose } = props
+  const { visible } = props
+  const navigate = useNavigate()
+  const navigateProjects = () => {
+    navigate(0)
+  }
 
   return (
     <>
@@ -29,7 +34,7 @@ export default function AlertModal(props) {
               color="secondary"
               variant="contained"
               autoFocus
-              onClick={onClose}
+              onClick={navigateProjects}
             >
               Voltar para projetos
             </Button>

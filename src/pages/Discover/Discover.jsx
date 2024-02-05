@@ -1,47 +1,32 @@
+import { Snackbar } from '@mui/base'
+import { Alert } from '@mui/material'
 import { useEffect, useState } from 'react'
 import orangeAPI from '../../api/config'
 import ProjectsList from '../../components/ProjectsList/ProjectsList'
 import './style.css'
-const projects = [
-  {
-    id: 1,
-    img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
-    link: 'github.com/algumacoisa',
-    description: 'Esse é meu projeto',
-    date: '12/12',
-    tags: ['UX', 'Web']
-  },
-  {
-    id: 2,
-    img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
-    link: 'github.com/algumacoisa',
-    description: 'Esse é meu projeto',
-    date: '12/12',
-    tags: ['UX', 'Web']
-  },
-  {
-    id: 3,
-    img: 'https://source.unsplash.com/featured/389x258',
-    name: 'Nome Projeto',
-    link: 'github.com/algumacoisa',
-    description: 'Esse é meu projeto',
-    date: '12/12',
-    tags: ['UX', 'Web']
-  }
-]
 
 function Discover() {
   const [loading, setLoading] = useState(false)
+  const [errorRequest, setErrorRequest] = useState(false)
+
+  const [projects, setProjects] = useState([])
 
   const getProjects = async () => {
     setLoading(true)
-    const response = await orangeAPI.get('/projects')
-    console.log(response)
-    setLoading(false)
+    await orangeAPI
+      .get('/projects')
+      .then((response) => {
+        setProjects(response.data)
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        setLoading(false)
+      })
   }
-
+  const handleCloseSnackbar = () => {
+    setErrorRequest(false)
+  }
   useEffect(() => {
     getProjects()
   }, [])
@@ -57,11 +42,28 @@ function Discover() {
           transformando experiências em conexões inesquecíveis
         </h2>
       </section>
+
       <ProjectsList
         projects={projects}
         isLoading={loading}
         isPersonal={false}
       />
+
+      <Snackbar
+        open={errorRequest}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          variant="filled"
+          severity="error"
+          onClose={handleCloseSnackbar}
+          sx={{ width: '100%' }}
+        >
+          Falha ao editar projeto!
+        </Alert>
+      </Snackbar>
     </section>
   )
 }
