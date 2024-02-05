@@ -1,60 +1,64 @@
-import Banner from "../../components/Banner/banner";
-import signUpBanner from "../../assets/sign-up-banner.svg";
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import { LoadingButton } from '@mui/lab'
 import {
-  TextField,
-  Button,
-  InputAdornment,
-  IconButton,
-  FormHelperText,
-  Snackbar,
   Alert,
-} from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
-import orangeAPI from "../../api/config";
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  TextField
+} from '@mui/material'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import orangeAPI from '../../api/config'
+import signUpBanner from '../../assets/sign-up-banner.svg'
+import Banner from '../../components/Banner/banner'
 
 function SignUp() {
-  const { control, handleSubmit, formState } = useForm(
-    {
-      defaultValues: {
-        name: "",
-        lastName: "",
-        email: "",
-        password: "",
-      },
+  const { control, handleSubmit, formState } = useForm({
+    defaultValues: {
+      name: '',
+      lastName: '',
+      email: '',
+      password: ''
     }
-  );
-  const { errors } = formState;
-  const [showPassword, setShowPassword] = useState(false);
-  const [signUpError, setSignUpError] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  })
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+  const { errors } = formState
+  const [showPassword, setShowPassword] = useState(false)
+  const [signUpError, setSignUpError] = useState(false)
+  const [loginSuccess, setLoginSuccess] = useState(false)
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
-      const response = await orangeAPI.post("/signup", {
+      const response = await orangeAPI.post('/signup', {
         name: data.name,
         lastName: data.lastName,
         email: data.email,
-        password: data.password,
-      });
-      console.log(response);
-      localStorage.setItem("token", JSON.stringify(response.data.token));
+        password: data.password
+      })
+      if (response.status === 201) {
+        navigate('/')
+        setIsLoading(false)
+      }
     } catch (error) {
-      setSignUpError(true);
+      setIsLoading(false)
+      setSignUpError(true)
     }
-  };
+  }
 
   const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   const handleCloseSnackbar = () => {
-    setSignUpError(false);
-    setLoginSuccess(false);
-  };
+    setSignUpError(false)
+    setLoginSuccess(false)
+  }
 
   return (
     <main className="flex">
@@ -133,7 +137,7 @@ function SignUp() {
                 {...field}
                 error={!!errors.email}
                 helperText={
-                  errors.email ? "Informe um e-mail válido" : undefined
+                  errors.email ? 'Informe um e-mail válido' : undefined
                 }
               />
             )}
@@ -146,18 +150,18 @@ function SignUp() {
               required: true,
               pattern:
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&!#])[A-Za-z\d@$!%*?&!#]/,
-              minLength: 6,
+              minLength: 6
             }}
             render={({ field }) => (
               <TextField
                 id="outlined-password-input"
                 label="Password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 {...field}
                 error={!!errors.password}
                 helperText={
-                  errors.password ? "Informe uma senha segura" : undefined
+                  errors.password ? 'Informe uma senha segura' : undefined
                 }
                 InputProps={{
                   endAdornment: (
@@ -174,7 +178,7 @@ function SignUp() {
                         )}
                       </IconButton>
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -190,14 +194,15 @@ function SignUp() {
             <br />- Ao menos 1 caractere especial: @$!%*?&!#
           </FormHelperText>
 
-          <Button
+          <LoadingButton
+            loading={isLoading}
             type="submit"
             variant="contained"
             color="secondary"
             size="medium"
           >
             CADASTRAR
-          </Button>
+          </LoadingButton>
 
           <Link to="/" className="text-[#818388]">
             Já tem uma conta? Faça Login
@@ -208,13 +213,13 @@ function SignUp() {
           open={signUpError}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
             variant="filled"
             severity="error"
             onClose={handleCloseSnackbar}
-            sx={{ width: "95%" }}
+            sx={{ width: '95%' }}
           >
             Ocorreu um erro ao tentar realizar o cadastro
           </Alert>
@@ -224,20 +229,20 @@ function SignUp() {
           open={loginSuccess}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <Alert
             variant="filled"
             severity="success"
             onClose={handleCloseSnackbar}
-            sx={{ width: "100%" }}
+            sx={{ width: '100%' }}
           >
             Cadastro feito com sucesso
           </Alert>
         </Snackbar>
       </section>
     </main>
-  );
+  )
 }
 
-export default SignUp;
+export default SignUp

@@ -1,6 +1,8 @@
 import { useTheme } from '@emotion/react'
 import { Collections } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
+  Alert,
   Button,
   CardContent,
   Dialog,
@@ -9,28 +11,62 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Snackbar,
   TextField,
   Typography,
   useMediaQuery
 } from '@mui/material'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import orangeAPI from '../../api/config'
+import { ReloadContext } from '../../pages/MyProjects/MyProjects'
 import AlertModal from '../AlertModal/AlertModal'
 import PreviewProjectModal from '../PreviewProjectModal/PreviewProjectModal'
 
 export default function EditProjectModal(props) {
   const { currentProject, onClose, visible } = props
+
+  const [errorRequest, setErrorRequest] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState(currentProject.img || null)
 
   const [alertModalVisible, setAlertModalVisible] = useState(false)
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
-  const { control, getValues, reset } = useForm(currentProject)
+  const { control, getValues, reset, setValue } = useForm()
+  const { reload } = useContext(ReloadContext)
 
   const fileUploadRef = useRef(null)
-  const handleEdit = () => {
-    console.log(getValues())
-    handleClose()
-    setAlertModalVisible(true)
+
+  const handleCloseSnackbar = () => {
+    setErrorRequest(false)
+  }
+  async function editProject(data) {
+    return await orangeAPI.patch(`/updateProject/${currentProject.id}`, data)
+  }
+  async function handleEdit() {
+    setIsLoading(true)
+
+    const values = getValues()
+
+    const projectData = {
+      title: values.title,
+      link: values.link,
+      tags: values.tags.split(',').map((tag) => tag.trim()),
+      description: values.description
+    }
+
+    await editProject(projectData)
+      .then(() => {
+        setIsLoading(false)
+        handleClose()
+        setAlertModalVisible(true)
+        setSelectedImage(null)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+        setErrorRequest(true)
+      })
   }
   const handleClose = () => {
     reset()
@@ -38,7 +74,7 @@ export default function EditProjectModal(props) {
   }
   const closeAlertModal = () => {
     setAlertModalVisible(false)
-    // TODO: Atualizar projeto com novas alterações
+    reload()
   }
   const handleOpenPreviewModal = () => {
     setPreviewModalVisible(true)
@@ -52,15 +88,14 @@ export default function EditProjectModal(props) {
     }
   }
 
-  const removeSelectImage = () => {
-    setSelectedImage(null)
-  }
   useEffect(() => {
     if (currentProject && visible) {
       reset(currentProject)
-      setSelectedImage(currentProject.img || null)
+      setSelectedImage(currentProject.imageUrl || null)
     }
+    setValue('tags', currentProject?.tags?.map((tag) => tag.name).join(', '))
   }, [currentProject, reset, visible])
+
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
   return (
@@ -180,22 +215,6 @@ export default function EditProjectModal(props) {
                   >
                     Visualizar publicação
                   </Typography>
-                  {selectedImage && (
-                    <Typography
-                      onClick={removeSelectImage}
-                      sx={{
-                        color: '#515255',
-                        fontWeight: 400,
-                        fontSize: '16px',
-                        mt: '8px',
-                        ':hover': {
-                          cursor: 'pointer'
-                        }
-                      }}
-                    >
-                      Remover imagem
-                    </Typography>
-                  )}
                 </div>
               </section>
               <section className="flex flex-col gap-4 w-9/12 sm:w-full items-center inputs-container">
@@ -252,30 +271,51 @@ export default function EditProjectModal(props) {
               justifyContent: isSmallScreen ? 'center' : 'flex-start'
             }}
           >
-            <Button
+            <LoadingButton
               type="submit"
-              color="secondary"
               variant="contained"
+              color="secondary"
+              loading={isLoading}
               onClick={() => handleEdit()}
             >
               Salvar
-            </Button>
+            </LoadingButton>
             <Button color="secondary" variant="contained" onClick={handleClose}>
               Cancelar
             </Button>
           </DialogActions>
         </div>
       </Dialog>
+      <Snackbar
+        open={errorRequest}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          variant="filled"
+          severity="error"
+          onClose={handleCloseSnackbar}
+          sx={{ width: '100%' }}
+        >
+          Falha ao editar projeto!
+        </Alert>
+      </Snackbar>
       <AlertModal
         text="Edição concluída com sucesso!"
         visible={alertModalVisible}
         onClose={closeAlertModal}
       ></AlertModal>
-      <PreviewProjectModal
-        visible={previewModalVisible}
-        onClose={closePreviewModal}
-      ></PreviewProjectModal>
+      {visible && (
+        <PreviewProjectModal
+          visible={previewModalVisible}
+          onClose={closePreviewModal}
+          currentProject={getValues()}
+          currentTags={getValues()?.tags?.split(',')}
+          currentImage={currentProject.imageUrl}
+          currentDate={currentProject.releaseDate}
+        ></PreviewProjectModal>
+      )}
     </>
-    // project={project} TODO: passar o form como propriedade
   )
 }

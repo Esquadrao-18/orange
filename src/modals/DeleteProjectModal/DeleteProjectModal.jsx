@@ -1,25 +1,47 @@
+import { LoadingButton } from '@mui/lab'
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogTitle,
+  Snackbar,
   Typography
 } from '@mui/material'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import orangeAPI from '../../api/config'
+import { ReloadContext } from '../../pages/MyProjects/MyProjects'
 import AlertModal from '../AlertModal/AlertModal'
 
 export default function DeleteProjectModal(props) {
   const { onClose, visible, currentProject } = props
+  const [errorRequest, setErrorRequest] = useState(false)
+
   const [alertModalVisible, setAlertModalVisible] = useState(false)
+  const { reload } = useContext(ReloadContext)
+  const [isLoading, setIsLoading] = useState(false)
+  const handleCloseSnackbar = () => {
+    setErrorRequest(false)
+  }
 
   const closeAlertModal = () => {
     setAlertModalVisible(false)
+    reload()
   }
-  const handleDelete = (id) => {
-    // TODO: após resposta
-    console.log('Deletar projeto do seguinte id:', id)
-    onClose()
-    setAlertModalVisible(true)
+  const handleDelete = async (id) => {
+    setIsLoading(true)
+    await orangeAPI
+      .delete(`/deleteProject/${id}`)
+      .then(() => {
+        onClose()
+        setAlertModalVisible(true)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+        setErrorRequest(true)
+      })
   }
 
   const handleClose = () => {
@@ -43,14 +65,14 @@ export default function DeleteProjectModal(props) {
             Se você prosseguir irá excluir o projeto do seu portfólio
           </Typography>
           <DialogActions sx={{ justifyContent: 'flex-start', padding: 0 }}>
-            <Button
-              color="secondary"
+            <LoadingButton
               variant="contained"
-              autoFocus
+              color="secondary"
+              loading={isLoading}
               onClick={() => handleDelete(currentProject.id)}
             >
               Excluir
-            </Button>
+            </LoadingButton>
             <Button
               color="secondary"
               variant="contained"
@@ -62,6 +84,21 @@ export default function DeleteProjectModal(props) {
           </DialogActions>
         </div>
       </Dialog>
+      <Snackbar
+        open={errorRequest}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          variant="filled"
+          severity="error"
+          onClose={handleCloseSnackbar}
+          sx={{ width: '100%' }}
+        >
+          Falha ao excluir projeto!
+        </Alert>
+      </Snackbar>
       <AlertModal
         text="Projeto deletado com sucesso!"
         visible={alertModalVisible}

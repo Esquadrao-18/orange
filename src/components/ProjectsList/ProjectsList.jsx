@@ -2,14 +2,15 @@ import { Skeleton, TextField } from '@mui/material'
 import { createContext, useState } from 'react'
 import DeleteProjectModal from '../../modals/DeleteProjectModal/DeleteProjectModal'
 import EditProjectModal from '../../modals/EditModal/EditProjectModal'
-import AddProjectCard from '../AddProjectCard/AddProjectCard'
 import ProjectCard from '../ProjectCard/ProjectCard'
 import './style.css'
 
 export const ProjectContext = createContext(null)
 
 export default function ProjectsList(props) {
-  const { projects, isPersonal } = props
+  const { projects, isPersonal, isLoading } = props
+  const [filteredProjects, setFilteredProjects] = useState(null)
+  const [isSearching, setIsSearching] = useState(false)
   const [selectedProject, setSelectedProject] = useState({})
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
@@ -29,6 +30,21 @@ export default function ProjectsList(props) {
     setDeleteModalVisible(true)
   }
 
+  function findProjectsByTag(search) {
+    if (search == '') {
+      setIsSearching(false)
+    } else {
+      setIsSearching(true)
+    }
+    const filtered = projects.filter((project) =>
+      project.tags.some((tag) =>
+        tag.name.toLowerCase().includes(search.toLowerCase())
+      )
+    )
+    setFilteredProjects(filtered)
+  }
+
+  const currentProjects = isSearching ? filteredProjects : projects
   return (
     <>
       <ProjectContext.Provider
@@ -37,7 +53,7 @@ export default function ProjectsList(props) {
           handleDeleteModal: handleOpenDeleteModal
         }}
       >
-        <section className="w-screen flex flex-col px-8">
+        <section className="w-screen flex flex-col px-8 h-full">
           <div className="projects-area-top  sm:w-[43%]  w-full">
             {isPersonal ? (
               <h4
@@ -48,12 +64,20 @@ export default function ProjectsList(props) {
               </h4>
             ) : undefined}
 
-            <TextField fullWidth label="Buscar tags" variant="outlined" />
+            <TextField
+              fullWidth
+              label="Buscar tags"
+              variant="outlined"
+              onChange={(e) => findProjectsByTag(e.target.value)}
+            />
           </div>
           <div className="flex flex-wrap gap-6 my-10 justify-center sm:justify-normal">
-            {projects.length == 0 ? (
+            {isLoading ? (
               <>
-                <AddProjectCard />
+                <Skeleton
+                  variant="rectangular"
+                  sx={{ minWidth: 312, maxWidth: 389, height: 258 }}
+                />
                 <Skeleton
                   variant="rectangular"
                   sx={{ minWidth: 312, maxWidth: 389, height: 258 }}
@@ -64,7 +88,7 @@ export default function ProjectsList(props) {
                 />
               </>
             ) : (
-              projects.map((project) => (
+              currentProjects.map((project) => (
                 <ProjectCard
                   isPersonal={isPersonal}
                   key={project.id}
@@ -75,16 +99,20 @@ export default function ProjectsList(props) {
           </div>
         </section>
       </ProjectContext.Provider>
-      <EditProjectModal
-        currentProject={selectedProject}
-        visible={editModalVisible}
-        onClose={handleCloseEditModal}
-      />
-      <DeleteProjectModal
-        currentProject={selectedProject}
-        visible={deleteModalVisible}
-        onClose={handleCloseDeleteModal}
-      ></DeleteProjectModal>
+      {isPersonal && (
+        <>
+          <EditProjectModal
+            currentProject={selectedProject}
+            visible={editModalVisible}
+            onClose={handleCloseEditModal}
+          />
+          <DeleteProjectModal
+            currentProject={selectedProject}
+            visible={deleteModalVisible}
+            onClose={handleCloseDeleteModal}
+          ></DeleteProjectModal>{' '}
+        </>
+      )}
     </>
   )
 }

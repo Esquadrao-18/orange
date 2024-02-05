@@ -4,16 +4,18 @@ const orangeAPI = axios.create({
   baseURL: 'https://orange-api.onrender.com',
   headers: {
     'Content-Type': 'application/json'
-  },
-  interceptors: {
-    request: (config) => {
-      const token = localStorage.getItem('token')
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
-      return config
-    }
   }
+})
+
+orangeAPI.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token
+      .replace('"', '')
+      .replace('"', '')}`
+  }
+  return config
 })
 
 export default orangeAPI

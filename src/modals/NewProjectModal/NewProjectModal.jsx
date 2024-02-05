@@ -1,6 +1,8 @@
 import { useTheme } from '@emotion/react'
 import { Collections } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
+  Alert,
   Button,
   CardContent,
   Dialog,
@@ -9,6 +11,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Snackbar,
   TextField,
   Typography,
   useMediaQuery
@@ -19,30 +22,69 @@ import AlertModal from '../AlertModal/AlertModal'
 import PreviewProjectModal from '../PreviewProjectModal/PreviewProjectModal'
 import './style.css'
 
+import orangeAPI from '../../api/config'
+import { useAuth } from '../../hooks/useAuth'
+
 export default function NewProjectModal(props) {
-  // TODO: Implementar useForm
+  const { userData } = useAuth()
+  const [errorRequest, setErrorRequest] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
 
   const [alertModalVisible, setAlertModalVisible] = useState(false)
   const [previewModalVisible, setPreviewModalVisible] = useState(false)
   const { visible, onClose } = props
   const { control, getValues, reset } = useForm()
+
+  // const { reload } = useContext(ReloadContext)
   const fileUploadRef = useRef(null)
 
+  async function createProject(data) {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+    return await orangeAPI.post('/createProject', data, config)
+  }
+  const handleCloseSnackbar = () => {
+    setErrorRequest(false)
+  }
   function handleClose() {
     reset()
     onClose()
     setSelectedImage(null)
   }
-  function handleSave() {
-    console.log(getValues())
-    handleClose()
-    setAlertModalVisible(true)
-    setSelectedImage(null)
+  async function handleSave() {
+    setIsLoading(true)
+    const values = getValues()
+    const formData = new FormData()
+    formData.append('title', values.title)
+    formData.append('link', values.link)
+    values.tags.split(',').forEach((tag) => {
+      formData.append('tags', tag)
+    })
+    formData.append('description', values.description)
+    formData.append('image', selectedImage)
+    formData.append('releaseDate', new Date().toISOString())
+    formData.append('userId', userData.id)
+
+    await createProject(formData)
+      .then(() => {
+        setIsLoading(false)
+        handleClose()
+        setAlertModalVisible(true)
+        setSelectedImage(null)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+        setErrorRequest(true)
+      })
   }
   function closeAlertModal() {
     setAlertModalVisible(false)
-    // TODO: Atualizar projetos da listagem
+    // reload()
   }
   const handleOpenPreviewModal = () => {
     setPreviewModalVisible(true)
@@ -54,10 +96,6 @@ export default function NewProjectModal(props) {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedImage(e.target.files[0])
     }
-  }
-
-  const removeSelectImage = () => {
-    setSelectedImage(null)
   }
 
   const theme = useTheme()
@@ -184,22 +222,6 @@ export default function NewProjectModal(props) {
                   >
                     Visualizar publicação
                   </Typography>
-                  {selectedImage && (
-                    <Typography
-                      onClick={removeSelectImage}
-                      sx={{
-                        color: '#515255',
-                        fontWeight: 400,
-                        fontSize: '16px',
-                        mt: '8px',
-                        ':hover': {
-                          cursor: 'pointer'
-                        }
-                      }}
-                    >
-                      Remover imagem
-                    </Typography>
-                  )}
                 </div>
               </section>
               <section className="flex flex-col gap-4 w-9/12 sm:w-full items-center inputs-container">
@@ -224,6 +246,8 @@ export default function NewProjectModal(props) {
                       {...field}
                       label="Tags"
                       style={{ width: '100%' }}
+                      inputProps={{ maxLength: 21 }}
+                      placeholder="ex: Web, Machine Learning"
                     />
                   )}
                 />
@@ -236,6 +260,7 @@ export default function NewProjectModal(props) {
                       {...field}
                       label="Link"
                       style={{ width: '100%' }}
+                      placeholder="ex: https://www.seusite.com"
                     />
                   )}
                 />
@@ -254,20 +279,36 @@ export default function NewProjectModal(props) {
               </section>
             </form>
           </DialogContent>
+          <Snackbar
+            open={errorRequest}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              variant="filled"
+              severity="error"
+              onClose={handleCloseSnackbar}
+              sx={{ width: '100%' }}
+            >
+              Falha ao criar projeto!
+            </Alert>
+          </Snackbar>
           <DialogActions
             sx={{
               display: 'flex',
               justifyContent: isSmallScreen ? 'center' : 'flex-start'
             }}
           >
-            <Button
+            <LoadingButton
               type="submit"
-              color="secondary"
               variant="contained"
+              color="secondary"
+              loading={isLoading}
               onClick={() => handleSave()}
             >
               Salvar
-            </Button>
+            </LoadingButton>
             <Button color="secondary" variant="contained" onClick={handleClose}>
               Cancelar
             </Button>
@@ -282,6 +323,10 @@ export default function NewProjectModal(props) {
       <PreviewProjectModal
         visible={previewModalVisible}
         onClose={closePreviewModal}
+        currentProject={getValues()}
+        currentTags={getValues().tags?.split(',')}
+        currentImage={selectedImage ? URL.createObjectURL(selectedImage) : null}
+        currentDate={new Date()}
       ></PreviewProjectModal>
     </>
   )

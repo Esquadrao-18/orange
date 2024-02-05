@@ -19,3 +19,6 @@
   --h5-size: 24px;
   --h6-size: 20px;
 }
+html {
+  overflow-x: hidden;
+}
