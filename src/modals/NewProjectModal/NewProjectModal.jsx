@@ -251,6 +251,9 @@ export default function NewProjectModal(props) {
                     />
                   )}
                 />
+                <p className="w-full text-xs mt-[-12px]">
+                  Informe no mínimo 2 tags
+                </p>
                 <Controller
                   name="link"
                   control={control}
