@@ -1,12 +1,12 @@
 import { jwtDecode } from 'jwt-decode'
-import { createContext, useMemo, useState } from 'react'
+import { createContext, useMemo } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage('token', null)
-  const [isGoogle, setIsGoogle] = useState(false)
+  const [isGoogle, setIsGoogle] = useLocalStorage('isGoogle', '')
 
   const userData = user
     ? isGoogle
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null)
-    setIsGoogle(false)
+    setIsGoogle('')
   }
 
   const value = useMemo(

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import orangeAPI from '../../api/config'
 import ProjectsList from '../../components/ProjectsList/ProjectsList'
 import './style.css'
 const projects = [
@@ -32,11 +33,19 @@ const projects = [
 ]
 
 function Discover() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+
+  const getProjects = async () => {
+    setLoading(true)
+    const response = await orangeAPI.get('/projects')
+    console.log(response)
+    setLoading(false)
+  }
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1500)
+    getProjects()
   }, [])
+
   return (
     <section className="w-screen flex flex-col px-8 items-center discover-container">
       <section className="w-full flex items-center justify-center gap-[42px] sm:py-28 user-container ">

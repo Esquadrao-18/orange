@@ -28,6 +28,9 @@ export default function NewProjectModal(props) {
   const { visible, onClose } = props
   const { control, getValues, reset } = useForm()
   const fileUploadRef = useRef(null)
+  // async function createProject() {
+  //   orangeAPI.post('/createProject')
+  // }
 
   function handleClose() {
     reset()
@@ -35,7 +38,7 @@ export default function NewProjectModal(props) {
     setSelectedImage(null)
   }
   function handleSave() {
-    console.log(getValues())
+    console.log('get', getValues())
     handleClose()
     setAlertModalVisible(true)
     setSelectedImage(null)
@@ -74,7 +77,10 @@ export default function NewProjectModal(props) {
             Adicionar projeto
           </DialogTitle>
           <DialogContent sx={{ overflow: 'hidden' }}>
-            <form className="flex flex-col-reverse items-center justify-center md:flex-row gap-6 form">
+            <form
+              encType="multipart/form-data"
+              className="flex flex-col-reverse items-center justify-center md:flex-row gap-6 form"
+            >
               <section className="w-full">
                 <DialogContentText
                   sx={{
