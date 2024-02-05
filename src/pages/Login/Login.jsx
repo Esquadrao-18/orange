@@ -15,7 +15,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom/dist'
 import orangeAPI from '../../api/config'
 import loginBanner from '../../assets/login-banner.svg'
-import Banner from '../../components/Banner/banner'
+import Banner from '../../components/Banner/Banner'
 import { useAuth } from '../../hooks/useAuth'
 
 function Login() {
