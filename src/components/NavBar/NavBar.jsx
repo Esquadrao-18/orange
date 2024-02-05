@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import orangeLogo from '../../assets/logo-orange.svg'
 import notificationsIcon from '../../assets/notifications-icon.svg'
-import profileImg from '../../assets/profile-image.svg'
+import profileImg from '../../assets/profile-image.png'
 import { useAuth } from '../../hooks/useAuth'
 import './style.css'
 
@@ -133,6 +133,9 @@ function NavBar() {
           src={notificationsIcon}
           alt="Ícone de sino preenchido na cor branca"
         />
+        <IconButton onClick={handleLogout}>
+          <LogoutIcon sx={{ color: '#fcfdff' }} />
+        </IconButton>
       </section>
     </nav>
   )

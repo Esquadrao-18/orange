@@ -6,25 +6,15 @@ export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage('token', null)
-  const [isGoogle, setIsGoogle] = useLocalStorage('isGoogle', '')
 
-  const userData = user
-    ? isGoogle
-      ? { ...jwtDecode(user) }
-      : { ...jwtDecode(user).userInfo }
-    : {}
+  const userData = user ? { ...jwtDecode(user).userInfo } : {}
 
   const login = (token) => {
     setUser(token)
   }
-  const googleLogin = (token) => {
-    setUser(token)
-    setIsGoogle(true)
-  }
 
   const logout = () => {
     setUser(null)
-    setIsGoogle('')
   }
 
   const value = useMemo(
@@ -32,7 +22,6 @@ export const AuthProvider = ({ children }) => {
       user,
       userData,
       login,
-      googleLogin,
       logout
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
