@@ -9,6 +9,7 @@ import {
   TextField
 } from '@mui/material'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
+import { jwtDecode } from 'jwt-decode'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom/dist'
@@ -18,7 +19,7 @@ import Banner from '../../components/Banner/banner'
 import { useAuth } from '../../hooks/useAuth'
 
 function Login() {
-  const { login, googleLogin } = useAuth()
+  const { login } = useAuth()
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       email: '',
@@ -55,16 +56,33 @@ function Login() {
   const handleCloseSnackbar = () => {
     setLoginError(false)
   }
-  const handleLoginSuccess = (credentialResponse) => {
+  const handleLoginSuccess = async (credentialResponse) => {
     setIsLoading(true)
-    googleLogin(credentialResponse.credential)
-    navigate('/meus-projetos')
-    setIsLoading(false)
+    const googleData = jwtDecode(credentialResponse.credential)
+    const data = {
+      email: googleData.email,
+      name: googleData.given_name,
+      lastName: googleData.family_name,
+      googleId: googleData.sub
+    }
+    await orangeAPI
+      .post('/signin/google', data)
+      .then(({ data }) => {
+        login(data.token)
+        navigate('/meus-projetos')
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+        setLoginError(true)
+      })
   }
 
   const handleLoginFailure = () => {
     setLoginError(true)
   }
+
   return (
     <main className="flex">
       <section>
