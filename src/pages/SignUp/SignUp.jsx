@@ -34,6 +34,7 @@ function SignUp() {
 
   const onSubmit = async (data) => {
     setIsLoading(true)
+    setSignUpError(false)
     try {
       const response = await orangeAPI.post('/signup', {
         name: data.name,
@@ -42,7 +43,11 @@ function SignUp() {
         password: data.password
       })
       if (response.status === 201) {
-        navigate('/')
+        setSignUpError(false)
+        setLoginSuccess(true)
+        setTimeout(() => {
+          navigate('/')
+        }, 2000)
         setIsLoading(false)
       }
     } catch (error) {
