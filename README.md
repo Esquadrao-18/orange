@@ -21,7 +21,7 @@ npm install
 Após a instalação das dependências, você pode iniciar a aplicação localmente com:
 
 `npm run dev`
-Isso iniciará a aplicação no modo de desenvolvimento. Abra http://localhost:3000 no seu navegador para visualizar o Orange Portfolio.
+Isso iniciará a aplicação no modo de desenvolvimento.
 
 ## Contribuição
 Se você quiser contribuir para este projeto, sinta-se à vontade para abrir uma issue ou enviar um pull request. Estamos ansiosos para receber suas sugestões!
